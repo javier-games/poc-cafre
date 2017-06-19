@@ -1,0 +1,171 @@
+fileFormatVersion: 2
+guid: 3546dbb5b3deb46878efd0c113b47f16
+timeCreated: 1497560056
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Back_Door
+    100002: Back_Door_2
+    100004: Back_Door_Window_1
+    100006: Back_Door_Window_2
+    100008: Back_Left_Wheel
+    100010: Back_Right_Wheel
+    100012: Back_Soft_Top
+    100014: //RootNode
+    100016: Chassis
+    100018: Defenses
+    100020: Doors
+    100022: Front_Door
+    100024: Front_Door__2
+    100026: Front_Door_Window_2
+    100028: Front_Door_Window__1
+    100030: Front_Left_Wheel
+    100032: Front_Right_Wheel
+    100034: Front_Soft_Top
+    100036: Soft_Tops
+    100038: Wheels
+    100040: Windows
+    400000: Back_Door
+    400002: Back_Door_2
+    400004: Back_Door_Window_1
+    400006: Back_Door_Window_2
+    400008: Back_Left_Wheel
+    400010: Back_Right_Wheel
+    400012: Back_Soft_Top
+    400014: //RootNode
+    400016: Chassis
+    400018: Defenses
+    400020: Doors
+    400022: Front_Door
+    400024: Front_Door__2
+    400026: Front_Door_Window_2
+    400028: Front_Door_Window__1
+    400030: Front_Left_Wheel
+    400032: Front_Right_Wheel
+    400034: Front_Soft_Top
+    400036: Soft_Tops
+    400038: Wheels
+    400040: Windows
+    2300000: Back_Door
+    2300002: Back_Door_2
+    2300004: Back_Door_Window_1
+    2300006: Back_Door_Window_2
+    2300008: Back_Left_Wheel
+    2300010: Back_Right_Wheel
+    2300012: Back_Soft_Top
+    2300014: Chassis
+    2300016: Defenses
+    2300018: Front_Door
+    2300020: Front_Door__2
+    2300022: Front_Door_Window_2
+    2300024: Front_Door_Window__1
+    2300026: Front_Left_Wheel
+    2300028: Front_Right_Wheel
+    2300030: Front_Soft_Top
+    2300032: Windows
+    3300000: Back_Door
+    3300002: Back_Door_2
+    3300004: Back_Door_Window_1
+    3300006: Back_Door_Window_2
+    3300008: Back_Left_Wheel
+    3300010: Back_Right_Wheel
+    3300012: Back_Soft_Top
+    3300014: Chassis
+    3300016: Defenses
+    3300018: Front_Door
+    3300020: Front_Door__2
+    3300022: Front_Door_Window_2
+    3300024: Front_Door_Window__1
+    3300026: Front_Left_Wheel
+    3300028: Front_Right_Wheel
+    3300030: Front_Soft_Top
+    3300032: Windows
+    4300000: Chassis
+    4300002: Windows
+    4300004: Defenses
+    4300006: Front_Door
+    4300008: Front_Door__2
+    4300010: Front_Door_Window_2
+    4300012: Front_Door_Window__1
+    4300014: Back_Door
+    4300016: Back_Door_2
+    4300018: Back_Door_Window_2
+    4300020: Back_Door_Window_1
+    4300022: Front_Soft_Top
+    4300024: Back_Soft_Top
+    4300026: Back_Left_Wheel
+    4300028: Front_Left_Wheel
+    4300030: Back_Right_Wheel
+    4300032: Front_Right_Wheel
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 3
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
