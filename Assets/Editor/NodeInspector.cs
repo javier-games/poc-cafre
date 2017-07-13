@@ -26,7 +26,7 @@ public class NodeInspector : Editor{
 
 
 
-	/*	ONSCENEGUI	*/
+	/*	ON SCENE GUI	*/
 
 	private void OnSceneGUI () {
 
@@ -80,6 +80,7 @@ public class NodeInspector : Editor{
 			if (EditorGUI.EndChangeCheck ()) {
 				Undo.RecordObject (node, "Move Tangent");
 				node.SetTangent (indexTangent, nodeTransform.InverseTransformPoint (tangent));
+				EnforceMode ();
 				node.SetLenght (LenghtUpdate());
 			}
 		}
@@ -110,9 +111,34 @@ public class NodeInspector : Editor{
 		return lenght;
 	}
 
+	private void EnforceMode () {
+
+		if (node.GetMode() == BezierMode.Free)
+			return;
+
+		int fixedIndex;
+		int enforcedIndex;
+
+		if ( tangentSelected < 1 ) {
+			fixedIndex = 0;
+			enforcedIndex = 1;
+		}
+		else {
+			fixedIndex = 1;
+			enforcedIndex = 0;
+		}
+
+		Vector3 middle = Vector3.zero;
+		Vector3 enforcedTangent = middle - node.GetTangent(fixedIndex);
+		if (node.GetMode() == BezierMode.Aligned) {
+			enforcedTangent = enforcedTangent.normalized * Vector3.Distance(middle, node.GetTangent(enforcedIndex));
+		}
+		node.SetTangent(enforcedIndex, (middle + enforcedTangent));
+	}
 
 
-	/*	ONINSPECTOR	*/
+
+	/*	ON INSPECTOR	*/
 
 	public override void OnInspectorGUI () {
 		if (tangentSelected >= 0 && tangentSelected < 2) {
@@ -165,10 +191,22 @@ public class NodeInspector : Editor{
 		Node leftNode = EditorGUILayout.ObjectField ("  Left Node", node.GetLeftNode (), typeof(Node), true) as Node;
 		if (EditorGUI.EndChangeCheck ()) {
 			if (node.IsEdge ()) {
-				if (leftNode != node.GetIncomingNode () && leftNode.IsEdge()) {
-					Undo.RecordObject (node, "Left Node Edit");
-					node.SetLeftNode (leftNode);
-					message = "";
+				if (leftNode != node.GetIncomingNode () ) {
+					if (leftNode) {
+						if (leftNode.IsEdge ()) {
+							Undo.RecordObject (node, "Left Node Edit");
+							node.SetLeftNode (leftNode);
+							message = "";
+						}
+						else {
+							message = "Has to be an edge";
+							type = MessageType.Error;
+						}
+					} else {
+						Undo.RecordObject (node, "Left Node Edit");
+						node.SetLeftNode (leftNode);
+						message = "";
+					}
 				} else {
 					message = "You can not set the left node as the incoming node and has to be an edge";
 					type = MessageType.Error;
@@ -183,10 +221,22 @@ public class NodeInspector : Editor{
 		Node rightNode = EditorGUILayout.ObjectField ("  Right Node",	node.GetRightNode (),	typeof(Node), true) as Node;
 		if (EditorGUI.EndChangeCheck ()) {
 			if (node.IsEdge ()) {
-				if (rightNode != node.GetIncomingNode () && rightNode.IsEdge()) {
-					Undo.RecordObject (node, "Right Node Edit");
-					node.SetRightNode (rightNode);
-					message = "";
+				if (rightNode != node.GetIncomingNode ()) {
+					if (rightNode) {
+						if (rightNode.IsEdge ()) {
+							Undo.RecordObject (node, "Right Node Edit");
+							node.SetRightNode (rightNode);
+							message = "";
+						}
+						else{
+							message = "Has to be an edge";
+							type = MessageType.Error;
+						}
+					} else {
+						Undo.RecordObject (node, "Right Node Edit");
+						node.SetRightNode (rightNode);
+						message = "";
+					}
 				} else {
 					message = "You can not set the right node as the incoming node and has to be an edge";
 					type = MessageType.Error;
@@ -210,6 +260,7 @@ public class NodeInspector : Editor{
 		if (EditorGUI.EndChangeCheck()) {
 			Undo.RecordObject(node, "Move Tangent");
 			node.SetTangent(0, backTangent);
+			EnforceMode ();
 			node.SetLenght (LenghtUpdate());
 
 		}
@@ -219,6 +270,7 @@ public class NodeInspector : Editor{
 		if (EditorGUI.EndChangeCheck()) {
 			Undo.RecordObject(node, "Move Tangent");;
 			node.SetTangent(1, frontTangent);
+			EnforceMode ();
 			node.SetLenght (LenghtUpdate());
 
 		}
@@ -226,7 +278,8 @@ public class NodeInspector : Editor{
 		BezierMode mode = (BezierMode)EditorGUILayout.EnumPopup("  Mode", node.GetMode());
 		if (EditorGUI.EndChangeCheck()) {
 			Undo.RecordObject(node, "Change Point Mode");
-			node.SetMode(tangentSelected,mode);
+			node.SetMode(mode);
+			EnforceMode ();
 			node.SetLenght (LenghtUpdate());
 		}
 
@@ -244,6 +297,7 @@ public class NodeInspector : Editor{
 			Undo.RecordObject(node, "Move Point");
 			EditorUtility.SetDirty(node);
 			node.SetTangent(tangentSelected, point);
+			EnforceMode ();
 			node.SetLenght (LenghtUpdate());
 
 		}
@@ -251,7 +305,8 @@ public class NodeInspector : Editor{
 		BezierMode mode = (BezierMode)EditorGUILayout.EnumPopup("Mode", node.GetMode());
 		if (EditorGUI.EndChangeCheck()) {
 			Undo.RecordObject(node, "Change Point Mode");
-			node.SetMode(tangentSelected,mode);
+			node.SetMode(mode);
+			EnforceMode ();
 			EditorUtility.SetDirty(node);
 			node.SetLenght (LenghtUpdate());
 		}
