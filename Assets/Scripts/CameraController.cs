@@ -21,7 +21,7 @@ public class CameraController: MonoBehaviour {
 
 	}
 
-	void Update () 
+	void LateUpdate () 
 	{
 		float yAngle = Mathf.SmoothDampAngle (
 			transform.eulerAngles.y,
@@ -39,4 +39,3 @@ public class CameraController: MonoBehaviour {
 		transform.LookAt (target.position-new Vector3(0,offset,0));
 	}
 }
-
