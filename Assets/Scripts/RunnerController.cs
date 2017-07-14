@@ -12,11 +12,14 @@ public class RunnerController : MonoBehaviour {
 	[Range (0f, 50f)]
 	[SerializeField]
 	private float speed=30f;
+	private float dir = 0f;
 
 	//	Transition
+	[Range (0.1f, 2f)]
 	[SerializeField]
 	private float	transitionTime = 1f;
 	private Vector3 velocityTransition;
+	private Vector3 lastPosition;
 
 	//	Required Components
 	private RunnerMovement movement;
@@ -38,7 +41,7 @@ public class RunnerController : MonoBehaviour {
 		transform.position = currentNode.IsEdge () ? GetIncomingPosition () : transform.position;
 		transform.rotation = currentNode.IsEdge () ? GetIncomingRotation () : transform.rotation;
 
-		movement.Move (0,0);
+		movement.Move (0f,speed/50f);
 	}
 		
 	private void ReadInputs(){
@@ -69,12 +72,13 @@ public class RunnerController : MonoBehaviour {
 			ref velocityTransition,
 			transitionTime
 		);
+		lastPosition = transform.position;
 		return incomingPosition;
 
 	}
 
 	private Quaternion GetIncomingRotation(){
-		Quaternion incomingRotation = currentNode.GetRotation ();
+		Quaternion incomingRotation = Quaternion.LookRotation((transform.position-lastPosition).normalized);
 		return incomingRotation;
 	}
 

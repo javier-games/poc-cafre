@@ -122,10 +122,6 @@ public class Node : MonoBehaviour {
 		);
 	}
 
-	public Quaternion GetRotation(){
-		return Quaternion.Lerp (transform.rotation,incomingNode.transform.rotation,indexTime);
-	}
-
 }
 
 public enum BezierMode {
