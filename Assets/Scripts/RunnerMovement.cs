@@ -12,7 +12,7 @@ public class RunnerMovement : MonoBehaviour {
 	[SerializeField]
 	private Animator animator;
 
-	//	Applying the movement
+	//	Applying the movement.
 	public void Move(float dir,float speed){
 		
 		animator.SetFloat ("Direction",dir);

@@ -2,7 +2,7 @@
 using UnityEditor;
 
 /*
- * 	The purpose of this script is to help yuo to see the path builded by nodes and the nodes
+ * 	The purpose of this script is to help you to see the path builded by nodes and the nodes.
 */
 
 public class Path : MonoBehaviour {
