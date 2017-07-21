@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 47b1e48e7e04d4e0dbd183423e01cc98
-timeCreated: 1499823209
+guid: 1a0f5b4dd270a47498cd564054e7ede9
+timeCreated: 1500580666
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube
+    4300000: Asphalt
     9500000: //RootNode
   materials:
     importMaterials: 0

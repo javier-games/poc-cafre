@@ -1,7 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/*
+ *	This script has to be attached to the endless runner character to make it run
+ */
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -11,11 +12,7 @@ public class RunnerMovement : MonoBehaviour {
 	[SerializeField]
 	private Animator animator;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-
+	//	Applying the movement
 	public void Move(float dir,float speed){
 		
 		animator.SetFloat ("Direction",dir);

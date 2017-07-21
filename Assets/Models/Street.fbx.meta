@@ -1,15 +1,32 @@
 fileFormatVersion: 2
-guid: 47b1e48e7e04d4e0dbd183423e01cc98
-timeCreated: 1499823209
+guid: 4c1ed6e339a794c4e91ecdf1662a1869
+timeCreated: 1500580666
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
+    100000: Left_Houses
+    100002: Left_Sidewalk
+    100004: Right_Houses
+    100006: Right_Sidewalk
+    100008: //RootNode
+    400000: Left_Houses
+    400002: Left_Sidewalk
+    400004: Right_Houses
+    400006: Right_Sidewalk
+    400008: //RootNode
+    2300000: Left_Houses
+    2300002: Left_Sidewalk
+    2300004: Right_Houses
+    2300006: Right_Sidewalk
+    3300000: Left_Houses
+    3300002: Left_Sidewalk
+    3300004: Right_Houses
+    3300006: Right_Sidewalk
+    4300000: Right_Houses
+    4300002: Right_Sidewalk
+    4300004: Left_Houses
+    4300006: Left_Sidewalk
     9500000: //RootNode
   materials:
     importMaterials: 0

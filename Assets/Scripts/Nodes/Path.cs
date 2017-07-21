@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
+/*
+ * 	The purpose of this script is to help yuo to see the path builded by nodes and the nodes
+*/
+
 public class Path : MonoBehaviour {
 
 	[SerializeField]
@@ -9,6 +13,7 @@ public class Path : MonoBehaviour {
 	private bool showNodes = true;
 	private bool showing = true;
 
+	//	Drawing the Path
 	private void OnDrawGizmos(){
 		if (showPath) {
 			Node[] nodes = transform.GetComponentsInChildren<Node> ();
@@ -28,6 +33,8 @@ public class Path : MonoBehaviour {
 				
 			}
 		}
+
+		//	Showing the nodes
 		if (showNodes && !showing) {
 			MeshRenderer[] meshes = transform.GetComponentsInChildren<MeshRenderer> ();
 			for (int i = 0; i < transform.childCount; i++) {

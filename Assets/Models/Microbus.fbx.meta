@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: fca1305d2526b4e7cbd03fd757025190
-timeCreated: 1499921007
+timeCreated: 1500581295
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
@@ -68,15 +68,15 @@ ModelImporter:
     4300020: Front_Right_Wheel
     7400000: Idle
     7400002: Run
-    7400004: RunTurnLeft
-    7400006: RunTurnRight
-    7400008: TurnRight
-    7400010: TurnLeft
-    7400012: RunMiddle
-    7400014: Bridle
+    7400004: Left
+    7400006: Right
+    7400008: Idle_Right
+    7400010: Idle_Left
+    7400012: Brake
+    7400014: Forward
     9500000: //RootNode
   materials:
-    importMaterials: 1
+    importMaterials: 0
     materialName: 0
     materialSearch: 1
   animations:
@@ -109,7 +109,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -158,14 +158,14 @@ ModelImporter:
       name: Run
       takeName: CINEMA_4D_Main
       firstFrame: 70
-      lastFrame: 100
+      lastFrame: 90
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -211,7 +211,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: RunTurnLeft
+      name: Left
       takeName: CINEMA_4D_Main
       firstFrame: 110
       lastFrame: 140
@@ -221,7 +221,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -267,7 +267,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: RunTurnRight
+      name: Right
       takeName: CINEMA_4D_Main
       firstFrame: 150
       lastFrame: 180
@@ -277,7 +277,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -323,7 +323,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TurnRight
+      name: Idle_Right
       takeName: CINEMA_4D_Main
       firstFrame: 190
       lastFrame: 225
@@ -333,7 +333,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -379,7 +379,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TurnLeft
+      name: Idle_Left
       takeName: CINEMA_4D_Main
       firstFrame: 230
       lastFrame: 265
@@ -389,7 +389,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -435,17 +435,17 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Bridle
+      name: Brake
       takeName: CINEMA_4D_Main
-      firstFrame: 272
-      lastFrame: 273
+      firstFrame: 270
+      lastFrame: 275
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -491,7 +491,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: RunMiddle
+      name: Forward
       takeName: CINEMA_4D_Main
       firstFrame: 280
       lastFrame: 340
@@ -501,7 +501,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 1
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -549,7 +549,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1.4
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
