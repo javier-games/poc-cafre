@@ -25,12 +25,15 @@ public class RunnerController : MonoBehaviour {
 	//	Required Components
 	private RunnerMovement movement;		//	Class to move the character.
 
+	private Gestures gesture;
 
 
 	// Initialization
 	void Start () {
 		movement = GetComponent<RunnerMovement>();
 		velocityTransition = Vector3.zero;
+
+		gesture = new Gestures ();
 	}
 
 
@@ -51,6 +54,9 @@ public class RunnerController : MonoBehaviour {
 
 	//	Reading Inputs
 	private void ReadInputs(){
+
+		#if UNITY_EDITOR
+
 		//	Move to Left.
 		if (Input.GetKeyDown (KeyCode.LeftArrow) && currentNode.GetLeftNode () ) {
 			//	Update the index of thenew current node.
@@ -69,6 +75,34 @@ public class RunnerController : MonoBehaviour {
 			//	Change the node.
 			currentNode = currentNode.GetRightNode ();
 		}
+
+		#endif
+
+		#if UNITY_IOS || UNITY_ANDROID
+
+		gesture.ReadGestures();
+
+		if (gesture.swipeState == SwipeState.Left && currentNode.GetLeftNode () ) {
+			//	Update the index of thenew current node.
+			currentNode.GetLeftNode ().SetIndexTime (currentNode.GetIndexTime ());
+			//	Reset the index.
+			currentNode.ResetIndexTime();
+			//	Change the node.
+			currentNode = currentNode.GetLeftNode ();
+		}
+		//	Move to right.
+		if (gesture.swipeState == SwipeState.Right && currentNode.GetRightNode () ) {
+			//	Update the index of thenew current node.
+			currentNode.GetRightNode ().SetIndexTime (currentNode.GetIndexTime ());
+			//	Reset the index.
+			currentNode.ResetIndexTime();
+			//	Change the node.
+			currentNode = currentNode.GetRightNode ();
+		}
+
+
+		#endif
+
 	}
 
 	//	Update to the new position.

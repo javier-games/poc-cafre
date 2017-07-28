@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
-
+#endif
 /*
  * 	The purpose of this script is to help you to see the path builded by nodes and the nodes.
 */
 
 public class Path : MonoBehaviour {
 
+	#if UNITY_EDITOR
 	[SerializeField]
 	private bool showPath = true;
 	[SerializeField]
@@ -48,5 +50,6 @@ public class Path : MonoBehaviour {
 			}
 			showing = false;
 		}
-	}	
+	}
+	#endif
 }
