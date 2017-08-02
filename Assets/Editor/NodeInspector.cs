@@ -114,7 +114,7 @@ public class NodeInspector : Editor{
 		float lenght = 0;
 		if (node.IsEdge()) {
 
-			int steps = 10;	//	Number of steps to segment the beziercurve.
+			int steps = 50;	//	Number of steps to segment the beziercurve.
 			Vector3[] stepPoints = new Vector3[steps];
 
 			//	Getting the step points.

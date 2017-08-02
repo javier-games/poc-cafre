@@ -6,7 +6,7 @@ using UnityEditor;
  * 	The purpose of this script is to help you to see the path builded by nodes and the nodes.
 */
 
-public class Path : MonoBehaviour {
+public class Trajectory : MonoBehaviour {
 
 	#if UNITY_EDITOR
 	[SerializeField]
