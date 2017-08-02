@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
  * 	Manager of the Graphic User Interface.
 */
 
-public class GUIManager : MonoBehaviour {
+public class MenuManager : MonoBehaviour {
 
 	//	Panels
 	[SerializeField]

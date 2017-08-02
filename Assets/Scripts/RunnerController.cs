@@ -1,38 +1,66 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 /*
  *	This script has to be attached to the endless runner character to make it run.
  */
 
 [RequireComponent(typeof(RunnerMovement))]
+[RequireComponent(typeof(PassengerDetector))]
 public class RunnerController : MonoBehaviour {
 
 
 	[SerializeField]
 	private Node currentNode;				//	Current node.
+
+	//	Variables of Speed
+
 	[Range (0f, 50f)]
 	[SerializeField]
-	private float speed=30f;				//	Speed of the character.
-	//private float dir = 0f;				//	Direction of the character.
-
-	//	Transition
-	[Range (0.1f, 2f)]
+	private float regularSpeed = 15f;		//	Regular speed of the character.
 	[SerializeField]
-	private float	transitionTime = 1f;	//	Time of the transition of the change between right and left.
+	private float speedIncrement = 10f;		//	Amount that can increase the speed.
+	[SerializeField]
+	private float speedDecrement = 15f;		//	Amount that can decrement the speed.
+
+	[SerializeField]
+	private float horizontalTime = 0.2f;	//	Time of the transition of the change between right and left.
+	[SerializeField]
+	private float brakeTime = 0.1f;			//	Time to brake.
+	[SerializeField]
+	private float accelerationTime = 1f;	//	Time to accelerate;
+	[SerializeField]
+	private float highSpeedDuration = 2f;	//	Duration of high speed.
+	[SerializeField]
+	private float lowSpeedDuration = 0.2f;	//	Duration of the brake.
+	[SerializeField]
+	private float minPassengerSpeed = 10f;	//	Minimum speed to get passenger
+	[SerializeField]
+	private float speed;					//	Speed of the character.
+	private float accel;					//	Acceleration of the character.
+	private float targetSpeed;				//	The speed desired.
+	private float startSpeed; 				//	The speed before start to accelerate.
+	private float startSpeedTime;			//	Time before start to accelerate.
+
 	private Vector3 velocityTransition;		//	Velocity of the transition.
 	private Vector3 lastPosition;			//	Last position.
 
 	//	Required Components
 	private RunnerMovement movement;		//	Class to move the character.
+	private PassengerDetector detector;		//	Class to detect passengers
 
 
 
 	// Initialization
 	void Start () {
 		movement = GetComponent<RunnerMovement>();
-		velocityTransition = Vector3.zero;
-	}
+		detector = GetComponent<PassengerDetector>();
 
+		speed = regularSpeed;
+		targetSpeed = regularSpeed;
+		startSpeed = regularSpeed;
+		accel = accelerationTime;
+	}
 
 	// Update
 	void Update () {
@@ -44,34 +72,111 @@ public class RunnerController : MonoBehaviour {
 		transform.position = currentNode.IsEdge () ? GetIncomingPosition () : transform.position;
 		//	If the current node is an edge get the incoming rotation.
 		transform.rotation = currentNode.IsEdge () ? GetIncomingRotation () : transform.rotation;
+		//	Updating the speed
+		speed =  Mathf.Lerp(startSpeed,targetSpeed,(Time.time - startSpeedTime)/accel );
 
-		//	Mode the character with the direction and the speed.
-		movement.Move (GetDirection(),speed/50f);
+		if (speed < minPassengerSpeed) {
+			if (detector.LookForAPassenger ()) {
+			
+			}
+		}
+
+		movement.Forward( speed/ 50f);
+
 	}
+
+
+
 
 	//	Reading Inputs
+
 	private void ReadInputs(){
+
+		#if UNITY_EDITOR
 		//	Move to Left.
-		if (Input.GetKeyDown (KeyCode.LeftArrow) && currentNode.GetLeftNode () ) {
-			//	Update the index of thenew current node.
-			currentNode.GetLeftNode ().SetIndexTime (currentNode.GetIndexTime ());
-			//	Reset the index.
-			currentNode.ResetIndexTime();
-			//	Change the node.
-			currentNode = currentNode.GetLeftNode ();
-		}
+		if (Input.GetKeyDown (KeyCode.LeftArrow) && currentNode.GetLeftNode () )
+			MoveToLeft();
+		//	Move to Right.
+		if (Input.GetKeyDown (KeyCode.RightArrow) && currentNode.GetRightNode() )
+			MoveToRight();
+		//	Increase the speed
+		if (Input.GetKeyDown(KeyCode.UpArrow) )
+			Accelerate();
+		//	Decrease the speed
+		if (Input.GetKeyDown(KeyCode.DownArrow) )
+			Brake();
+		#endif
+
+		#if UNITY_IOS || UNITY_ANDROID
+		//	Update Gesture State
+		Gestures.instance.ReadGestures();
+
+		//	Move to Left.
+		if (Gestures.instance.swipeState == SwipeState.Left && currentNode.GetLeftNode () )
+			MoveToLeft();
 		//	Move to right.
-		if (Input.GetKeyDown (KeyCode.RightArrow) && currentNode.GetRightNode () ) {
-			//	Update the index of thenew current node.
-			currentNode.GetRightNode ().SetIndexTime (currentNode.GetIndexTime ());
-			//	Reset the index.
-			currentNode.ResetIndexTime();
-			//	Change the node.
-			currentNode = currentNode.GetRightNode ();
-		}
+		if (Gestures.instance.swipeState == SwipeState.Right && currentNode.GetRightNode () )
+			MoveToRight();
+		//	Increase the speed
+		if (Gestures.instance.swipeState == SwipeState.Up )
+			Accelerate();
+		//	Decrease the speed
+		if (Gestures.instance.swipeState == SwipeState.Down )
+			Brake();
+		#endif
+
+	}
+	private void MoveToLeft(){
+		//	Update the index of thenew current node.
+		currentNode.GetLeftNode ().SetIndexTime (currentNode.GetIndexTime ());
+		//	Reset the index.
+		currentNode.ResetIndexTime();
+		//	Change the node.
+		currentNode = currentNode.GetLeftNode ();
+		movement.SetDirection (0.6f);
+	}
+	private void MoveToRight(){
+		//	Update the index of thenew current node.
+		currentNode.GetRightNode ().SetIndexTime (currentNode.GetIndexTime ());
+		//	Reset the index.
+		currentNode.ResetIndexTime();
+		//	Change the node.
+		currentNode = currentNode.GetRightNode ();
+		movement.SetDirection (-0.6f);
+	}
+	private void Brake(){
+		StopCoroutine ("ReturnSpeed");
+		//	Start transition to brake.
+		accel = brakeTime;
+		startSpeed = speed;
+		targetSpeed = targetSpeed - speedDecrement < 5f ? 5f : targetSpeed - speedDecrement;
+		movement.Brake ();
+		//	Start coroutine to stop state.
+		StartCoroutine("ReturnSpeed",lowSpeedDuration);
+	}
+	private void Accelerate(){
+		StopCoroutine ("ReturnSpeed");
+		//	Start transition to accelerate.
+		accel = accelerationTime;
+		startSpeed = speed;
+		startSpeedTime = Time.time;
+		targetSpeed = targetSpeed + speedIncrement > 50f ? 50f : targetSpeed + speedIncrement;
+		//	Start coroutine to stop state.
+		StartCoroutine("ReturnSpeed",highSpeedDuration);
+	}
+	IEnumerator ReturnSpeed(float timeToWait){
+		yield return new WaitForSeconds(timeToWait);
+		//	Start transition to back to the regular speed.
+		accel = lowSpeedDuration;
+		startSpeed = speed;
+		startSpeedTime = Time.time;
+		targetSpeed = regularSpeed;
 	}
 
+
+
 	//	Update to the new position.
+
 	private Vector3 GetIncomingPosition(){
 		
 		bool changeNode = false;	//	Variable used to know if it is necesary to change the node.
@@ -87,38 +192,16 @@ public class RunnerController : MonoBehaviour {
 			transform.position,
 			incomingPosition,
 			ref velocityTransition,
-			transitionTime
+			horizontalTime*(regularSpeed/speed)
 		);
 
 		//	Updating the position.
 		lastPosition = transform.position;
 		return incomingPosition;
-
 	}
-
 	private Quaternion GetIncomingRotation(){
 		//	Aligning the current rotation with the trajectory.
 		Quaternion incomingRotation = Quaternion.LookRotation((transform.position-lastPosition).normalized);
 		return incomingRotation;
 	}
-
-	//	Update to the new direction.
-	private float GetDirection(){
-		//	Getting the angle bewteen the current node and the incoming node.
-		float totalAngle = Vector3.Angle (currentNode.transform.forward,currentNode.GetIncomingNode().transform.forward);
-		//	Getting the angle bewteen the current node and the current rotation.
-		float angle = Vector3.Angle (currentNode.transform.forward,transform.forward);
-		//	A little mapping.
-		angle = ConvertRange (0f,totalAngle,0f,180f,angle);
-		//	Using a Sin functiong give us a number in the range of one and zero.
-		return Mathf.Sin(angle*Mathf.Deg2Rad); 
-	} 
-	public float ConvertRange( float originalStart, float originalEnd, float newStart, float newEnd, float value){ 
-		float scale = originalEnd - originalStart; 
-		if (scale != 0) 
-			scale = (newEnd - newStart) / (scale); 
-		return (newStart + ((value - originalStart) * scale)); 
-	} 
-
-
 }
