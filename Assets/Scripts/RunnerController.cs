@@ -12,6 +12,8 @@ public class RunnerController : MonoBehaviour {
 
 	[SerializeField]
 	private Node currentNode;				//	Current node.
+	[SerializeField]
+	private CoinFactory coins;				//	Factory of coins;
 
 	//	Variables of Speed
 
@@ -75,14 +77,14 @@ public class RunnerController : MonoBehaviour {
 		//	Updating the speed
 		speed =  Mathf.Lerp(startSpeed,targetSpeed,(Time.time - startSpeedTime)/accel );
 
-		if (speed < minPassengerSpeed) {
-			if (detector.LookForAPassenger ()) {
-			
-			}
-		}
+		if (speed < minPassengerSpeed)
+			detector.LookForAPassenger ();
 
 		movement.Forward( speed/ 50f);
 
+		if (Input.GetKeyDown (KeyCode.Space)) {
+			coins.TossCoins (0,1,0.1f);
+		}
 	}
 
 
