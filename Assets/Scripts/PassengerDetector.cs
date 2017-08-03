@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-/*
- * 	This script helps the bus to look for Passengers.
-*/
+/// <summary>
+/// 
+/// Passenger detector.
+/// This script helps the bus to look for Passengers.
+/// 
+/// </summary>
 
 public class PassengerDetector : MonoBehaviour {
 
@@ -12,22 +15,21 @@ public class PassengerDetector : MonoBehaviour {
 	private float maxDistance;			//	Maximum distance of the ray
 	[SerializeField]
 	private LayerMask passengerMask;	//	Layer of the passengers
+	[SerializeField]
+	private Transform doorHandle;
 
 	private RaycastHit passengerHit;	//	Info of the passenger reached by the ray.
 
-	public bool LookForAPassenger(){
+	public void LookForAPassenger(){
 
 		#if UNITY_EDITOR
 		//	Drawing the ray
-		Debug.DrawRay(transform.position + offset, transform.right,Color.cyan);
+		Debug.DrawLine(transform.position + offset, transform.position + offset + transform.right*maxDistance,Color.cyan);
 		#endif
 		//	Trigger the ray.
 		if (Physics.Raycast (transform.position + offset, transform.right, out passengerHit, maxDistance, passengerMask)) {
-			Debug.Log ("Passenger Detected at " + passengerHit.distance);
-			return true;
+			passengerHit.transform.GetComponent<PassengerController> ().Take(doorHandle);
 		}
-
-		return false;
 	}
 
 }

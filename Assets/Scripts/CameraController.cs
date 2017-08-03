@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-/*
- * The porpose of this script is to follow a target in an smoothy way and adjust it position.
-*/
+/// <summary>
+/// 
+/// Camera controller.
+/// The porpose of this script is to follow a target in an smoothy way and adjust it position.
+/// 
+/// </summary>
 
 public class CameraController: MonoBehaviour {
 
@@ -18,6 +21,8 @@ public class CameraController: MonoBehaviour {
 	private float height = 3.5f;		//	Distance in Y bewteen target and camera.
 	[SerializeField]
 	private float offset;				//	Offset to move the target out of the center.
+	[SerializeField]
+	private bool LookAt = true;
 
 	private float yVelocity = 30f;		//	Variable required by the SmoothDampAngle.
 
@@ -41,6 +46,7 @@ public class CameraController: MonoBehaviour {
 		transform.position = position;
 
 		//	Rotating the camero to the target.
-		transform.LookAt (target.position-new Vector3(0,offset,0));
+		if(LookAt)
+			transform.LookAt (target.position-new Vector3(0,offset,0));
 	}
 }

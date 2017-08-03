@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-/*
- *	This script has to be attached to the endless runner character to make it run.
- */
+/// <summary>
+/// 
+/// Runner controller.
+/// This script has to be attached to the endless runner character to make it run.
+/// 
+/// </summary>
 
 [RequireComponent(typeof(RunnerMovement))]
 [RequireComponent(typeof(PassengerDetector))]
@@ -12,6 +15,8 @@ public class RunnerController : MonoBehaviour {
 
 	[SerializeField]
 	private Node currentNode;				//	Current node.
+	[SerializeField]
+	private CoinFactory coins;				//	Factory of coins;
 
 	//	Variables of Speed
 
@@ -45,6 +50,8 @@ public class RunnerController : MonoBehaviour {
 	private Vector3 velocityTransition;		//	Velocity of the transition.
 	private Vector3 lastPosition;			//	Last position.
 
+	private bool trackPath = true;
+
 	//	Required Components
 	private RunnerMovement movement;		//	Class to move the character.
 	private PassengerDetector detector;		//	Class to detect passengers
@@ -64,25 +71,26 @@ public class RunnerController : MonoBehaviour {
 
 	// Update
 	void Update () {
+		
 
 		//	Reading the inputs.
 		ReadInputs ();
 
-		//	If the current node is an edge get the incoming position.
-		transform.position = currentNode.IsEdge () ? GetIncomingPosition () : transform.position;
-		//	If the current node is an edge get the incoming rotation.
-		transform.rotation = currentNode.IsEdge () ? GetIncomingRotation () : transform.rotation;
+		//	If the current node is an edge
+		if(currentNode.IsEdge () && trackPath){
+			//	Get the incoming position.
+			transform.position = GetIncomingPosition ();
+			//	Get the incoming rotation.
+			transform.rotation = GetIncomingRotation ();
+		}
+			
 		//	Updating the speed
 		speed =  Mathf.Lerp(startSpeed,targetSpeed,(Time.time - startSpeedTime)/accel );
 
-		if (speed < minPassengerSpeed) {
-			if (detector.LookForAPassenger ()) {
-			
-			}
-		}
+		if (speed < minPassengerSpeed)
+			detector.LookForAPassenger ();
 
 		movement.Forward( speed/ 50f);
-
 	}
 
 
@@ -203,5 +211,9 @@ public class RunnerController : MonoBehaviour {
 		//	Aligning the current rotation with the trajectory.
 		Quaternion incomingRotation = Quaternion.LookRotation((transform.position-lastPosition).normalized);
 		return incomingRotation;
+	}
+
+	public void StopTrackingPath(){
+		trackPath = false;
 	}
 }
