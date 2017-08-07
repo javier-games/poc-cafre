@@ -1,21 +1,4 @@
 ﻿using System.Collections;
-<<<<<<< HEAD
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum PassengerState{ WALKING, WAITING, BOARDING, TRAVELING, DYING}
-
-public class PassengerController : MonoBehaviour {
-
-	[SerializeField]
-	private float boardingTime = 0.2f;
-	[SerializeField]
-	private float travelingTransitionTime = 0.3f;
-	[SerializeField]
-	private float waitingTravelTime = 1f;
-	[SerializeField]
-	private Vector3 offsetBus;
-=======
 using UnityEngine;
 
 /// <summary>
@@ -35,7 +18,6 @@ public class PassengerController : MonoBehaviour {
 	[SerializeField] private float		waitingTravelTime = 1f;			//
 	[SerializeField] private Vector3	offsetBus;						//
 
->>>>>>> Optimization
 
 	private Transform target;
 	private Animator animator;
@@ -54,10 +36,6 @@ public class PassengerController : MonoBehaviour {
 	}
 	void Update () {
 
-<<<<<<< HEAD
-
-=======
->>>>>>> Optimization
 		switch (state) {
 		case PassengerState.BOARDING:
 

@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CollisionDetector : MonoBehaviour {
-
-	private CoinFactory factory;
-
-=======
 ﻿using UnityEngine;
 
 /// <summary>
@@ -31,22 +21,10 @@ public class CollisionDetector : MonoBehaviour {
 
 
 	//	Initializing
->>>>>>> Optimization
 	void Start(){
 		factory = GetComponent<CoinFactory> ();
 	}
 
-<<<<<<< HEAD
-	void OnTriggerEnter(Collider other){
-		if (other.transform.CompareTag ("Coin")) {
-			Destroy (other.gameObject);
-			factory.TossCoins (0,1,0.1f);
-		}
-	}
-	void OnCollisionEnter(Collision other){
-		if (other.transform.CompareTag ("Passenger")) {
-			Debug.Log ("onrg");
-=======
 	//	Trigger Methods
 	void OnTriggerEnter(Collider other){
 
@@ -91,7 +69,6 @@ public class CollisionDetector : MonoBehaviour {
 				//	Add a foce to impulse the other car.
 				other.transform.GetComponent<Rigidbody> ().AddForce(-other.contacts[0].normal*10000f,ForceMode.Impulse);
 			}
->>>>>>> Optimization
 		}
 	}
 }

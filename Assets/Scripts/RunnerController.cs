@@ -91,13 +91,6 @@ public class RunnerController : MonoBehaviour {
 			detector.LookForAPassenger ();
 
 		movement.Forward( speed/ 50f);
-<<<<<<< HEAD
-
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			coins.TossCoins (0,1,0.1f);
-		}
-=======
->>>>>>> Optimization
 	}
 
 

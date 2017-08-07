@@ -2,10 +2,6 @@
 using System.Collections;
 using UnityEngine;
 
-<<<<<<< HEAD
-public class CoinFactory : MonoBehaviour {
-
-=======
 /// <summary>
 /// 
 /// Coin factory.
@@ -17,30 +13,12 @@ public class CoinFactory : MonoBehaviour {
 public class CoinFactory : MonoBehaviour {
 
 	//	Structure of coins
->>>>>>> Optimization
 	[System.Serializable]
 	public struct CoinPrefab{
 		public GameObject prefab;
 		public int	amountInBuffer;
 	};
 
-<<<<<<< HEAD
-	[SerializeField]
-	private float regenerationTime = 0.1f;
-	[SerializeField]
-	private CoinPrefab[] coinPrefab;
-	private List<GameObject>[] coins;
-	private List<GameObject>[] coinsTemp;
-
-	void Awake(){
-
-		coins = new List<GameObject>[coinPrefab.Length];
-		coinsTemp = new List<GameObject>[coinPrefab.Length];
-
-		for (int i = 0; i < coinPrefab.Length; i++) {
-			coins [i] = new List<GameObject> ();
-			coinsTemp [i] = new List<GameObject> ();
-=======
 	//	Serialize Field Variables.
 	[SerializeField]
 	private float regenerationTime = 0.1f;		//	Time to regenerate a coin.
@@ -67,7 +45,6 @@ public class CoinFactory : MonoBehaviour {
 			coins [i] = new List<GameObject> ();
 			coinsTemp [i] = new List<GameObject> ();
 			//	Instantiating the prefab coin and adding to the available list of coins.
->>>>>>> Optimization
 			for (int j = 0; j < coinPrefab[i].amountInBuffer; j++) {
 				GameObject temp = Instantiate (coinPrefab[i].prefab, transform);
 				temp.name = coinPrefab[i].prefab.name;
@@ -76,19 +53,6 @@ public class CoinFactory : MonoBehaviour {
 		}
 	}
 
-<<<<<<< HEAD
-	public void TossCoins(int kind,int totalCoins,float offsetTime){
-		if (kind >= 0 && kind < coinPrefab.Length && totalCoins>0){
-			if (coins[kind].Count > 0) {
-				StartCoroutine (PlayAnimator (offsetTime*totalCoins, coins [kind] [0].GetComponent<Animator> (),kind));
-				coinsTemp [kind].Add (coins[kind][0]);
-				coins [kind].RemoveAt (0);
-				TossCoins (kind,totalCoins-1,offsetTime);
-			}else if(kind>0){
-				TossCoins (kind-1,totalCoins,offsetTime);
-			}else{
-				StartCoroutine (Wait(1f,kind,totalCoins,offsetTime));
-=======
 	//	Toss a coins.
 	public void TossCoins(int kind,int amountOfCoins,float offsetTime){
 		//	If the amount of coins and the kind are correct
@@ -110,24 +74,10 @@ public class CoinFactory : MonoBehaviour {
 			//	Else wait for an available coin.
 			else{
 				StartCoroutine (Wait(1f,kind,amountOfCoins,offsetTime));
->>>>>>> Optimization
 			}
 		}
 	}
 
-<<<<<<< HEAD
-	IEnumerator PlayAnimator(float timeToWait, Animator coinAnimator, int kind){
-		yield return new WaitForSeconds (timeToWait);
-		coinAnimator.SetTrigger ("Jump");
-		StartCoroutine (GetBack(regenerationTime,kind));
-	}
-	IEnumerator Wait(float timeToWait,int kind,int totalCoins,float offsetTime){
-		yield return new WaitForSeconds (timeToWait);
-		TossCoins (kind,totalCoins-1,offsetTime);
-	}
-	IEnumerator GetBack (float timeToWait, int kind)
-	{
-=======
 	//	Playing animation
 	IEnumerator PlayToss(float timeToWait, Animator coinAnimator, int kind){
 		yield return new WaitForSeconds (timeToWait);
@@ -143,7 +93,6 @@ public class CoinFactory : MonoBehaviour {
 	}
 	//	Return the coin to the available list.
 	IEnumerator GetBack (float timeToWait, int kind){
->>>>>>> Optimization
 		yield return new WaitForSeconds (timeToWait);
 		coins [kind].Add (coinsTemp [kind] [0]);
 		coinsTemp [kind].RemoveAt (0);
