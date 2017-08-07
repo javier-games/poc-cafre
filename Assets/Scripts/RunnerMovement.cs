@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-/*
- *	This script has to be attached to the endless runner character to make it run
- */
+
+/// <summary>
+/// 
+/// Runner movement.
+/// This script has to be attached to the endless runner character to make it run.
+/// 
+/// </summary>
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]

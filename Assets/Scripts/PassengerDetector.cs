@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-/*
- * 	This script helps the bus to look for Passengers.
-*/
+/// <summary>
+/// 
+/// Passenger detector.
+/// This script helps the bus to look for Passengers.
+/// 
+/// </summary>
 
 public class PassengerDetector : MonoBehaviour {
 

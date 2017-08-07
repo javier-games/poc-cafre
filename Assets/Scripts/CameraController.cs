@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 
-/*
- * The porpose of this script is to follow a target in an smoothy way and adjust it position.
-*/
+/// <summary>
+/// 
+/// Camera controller.
+/// The porpose of this script is to follow a target in an smoothy way and adjust it position.
+/// 
+/// </summary>
 
 public class CameraController: MonoBehaviour {
 

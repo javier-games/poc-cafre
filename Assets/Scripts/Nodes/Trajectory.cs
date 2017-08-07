@@ -18,35 +18,36 @@ public class Trajectory : MonoBehaviour {
 	//	Drawing the Path
 	private void OnDrawGizmos(){
 		if (showPath) {
-			Node[] nodes = transform.GetComponentsInChildren<Node> ();
-			for (int i = 0; i < transform.childCount; i++) {
-				if (nodes [i].IsEdge ()) {
-					Node incomingNode = nodes [i].GetIncomingNode ();
-					Handles.DrawBezier (
-						nodes [i].transform.position,
-						incomingNode.transform.position,
-						nodes [i].transform.TransformPoint (nodes [i].GetTangent (1)),
-						incomingNode.transform.TransformPoint (incomingNode.GetTangent (0)),
-						Color.gray,
-						null,
-						2f
-					);
+			for(int i = 0; i < transform.childCount; i++){
+				Node[] nodes = transform.GetChild(i).GetComponentsInChildren<Node> ();
+				foreach (Node node in nodes) {
+					if (node.IsEdge ()) {
+						Node incomingNode = node.GetIncomingNode ();
+						Handles.DrawBezier (
+							node.transform.position,
+							incomingNode.transform.position,
+							node.transform.TransformPoint (node.GetTangent (1)),
+							incomingNode.transform.TransformPoint (incomingNode.GetTangent (0)),
+							Color.gray,
+							null,
+							2f
+						);
+					}
 				}
-				
 			}
 		}
 
 		//	Showing the nodes
 		if (showNodes && !showing) {
 			MeshRenderer[] meshes = transform.GetComponentsInChildren<MeshRenderer> ();
-			for (int i = 0; i < transform.childCount; i++) {
-				meshes [i].enabled = true;
+			for (int j = 0; j < meshes.Length; j++) {
+				meshes [j].enabled = true;
 			}
 			showing = true;
-		}else if(!showNodes && showing){
+		}else if(!showNodes && showing){			
 			MeshRenderer[] meshes = transform.GetComponentsInChildren<MeshRenderer> ();
-			for (int i = 0; i < transform.childCount; i++) {
-				meshes [i].enabled = false;
+			for (int j = 0; j < meshes.Length; j++) {
+				meshes [j].enabled = false;
 			}
 			showing = false;
 		}
