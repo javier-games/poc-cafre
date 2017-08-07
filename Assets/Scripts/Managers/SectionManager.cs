@@ -18,9 +18,12 @@ public class SectionManager : MonoBehaviour {
 
 	//	//	Serialized Fild Variables
 	[SerializeField]
+	private TextAsset sectionsDataText;
+	[SerializeField]
 	private string fileName = "sections.json";		//	Name of the JSON.
 	[SerializeField]
 	private bool build = false;						//	Flag to know if the user are going to build a JSON.
+
 
 	//	Variables to read a JSON
 	private SectionList data;						//	Section Data extracted from a JSON.
@@ -148,7 +151,11 @@ public class SectionManager : MonoBehaviour {
 	//	Load data from a JSON
 
 	public void LoadSectionsData(){
-		if (File.Exists(Application.persistentDataPath + "/" + fileName)){
+		if (sectionsDataText != null) {
+			contentToRead = "";
+			contentToRead = sectionsDataText.ToString ();
+			data = JsonUtility.FromJson<SectionList>(contentToRead);
+		}else if (File.Exists(Application.persistentDataPath + "/" + fileName)){
 			sr = new StreamReader(Application.persistentDataPath + "/" + fileName);
 			contentToRead = "";
 			contentToRead = sr.ReadToEnd();

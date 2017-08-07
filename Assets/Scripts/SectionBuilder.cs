@@ -13,6 +13,8 @@ public class SectionBuilder : MonoBehaviour {
 
 	//	Serializable structure to easy add a new section with props.
 	[SerializeField]
+	private string fileName = "SectionsData.json";			//	Name of the JSON.
+	[SerializeField]
 	private Transform sectionContainer;					//	Transform that contains the sections as children
 
 	private StreamWriter	sw;							//	Variable to write a JSON.
@@ -74,13 +76,13 @@ public class SectionBuilder : MonoBehaviour {
 
 
 		//	Write data into a JSON.
-		sw = new StreamWriter(Application.persistentDataPath+"/"+ SectionManager.instance.GetFileName(), false);
+		sw = new StreamWriter(Application.persistentDataPath+"/"+ fileName, false);
 		contentToWrite = "";
 		contentToWrite = JsonUtility.ToJson(section);
 		sw.Write(contentToWrite);
 		sw.Close();
 
-		Debug.Log("Sections File Saved at: " + Application.persistentDataPath + "/" + SectionManager.instance.GetFileName());
+		Debug.Log("Sections File Saved at: " + Application.persistentDataPath + "/" + fileName);
 
 	}
 }
