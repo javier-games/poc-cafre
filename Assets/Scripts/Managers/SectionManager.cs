@@ -92,7 +92,7 @@ public class SectionManager : MonoBehaviour {
 		//	Obtaining props from the pool and modifying their transforms
 		for (int i = 0; i < data.section [index].prop.Count; i++) {
 			Prop propData = data.section [index].prop [i];
-			GameObject tempProp = ObjectPool.instance.GetGameObjectOfType(propData.id, false);
+			GameObject tempProp = ObjectPool.instance.GetGameObjectOfType(propData.id, true,TypeOfID.PROP);
 			if (tempProp) {
 				tempProp.transform.parent = sections [index].transform;
 				tempProp.transform.position = propData.position;
@@ -104,7 +104,7 @@ public class SectionManager : MonoBehaviour {
 		//	Obtaining items from the pool and modifying their transforms
 		for (int i = 0; i < data.section [index].item.Count; i++) {
 			Item itemData = data.section [index].item [i];
-			GameObject tempItem = ObjectPool.instance.GetGameObjectOfType(itemData.id, false);
+			GameObject tempItem = ObjectPool.instance.GetGameObjectOfType(itemData.id, true,TypeOfID.ITEM);
 			if (tempItem) {
 				tempItem.transform.parent = sections [index].transform;
 				tempItem.transform.position = itemData.position;
@@ -120,7 +120,9 @@ public class SectionManager : MonoBehaviour {
 	public void DesactiveSection(int index){
 		//	Turn Off the section
 		sections [index].SetActive (false);
-		for (int i = 0; i<sections [index].transform.childCount; i++) {
+
+		while (sections [index].transform.childCount>0) {
+			Debug.Log (sections [index].transform.GetChild (0).name);
 			ObjectPool.instance.PoolGameObject (sections [index].transform.GetChild (0).gameObject);
 		}
 

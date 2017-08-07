@@ -9,10 +9,143 @@ using UnityEngine;
 /// 
 /// </summary>
 
-
-
-
 public class ObjectPool : MonoBehaviour {
+
+
+	public static ObjectPool instance;
+
+	[System.Serializable]
+	public struct PrefabPool{
+		public GameObject prefab;
+		public int	amountInBuffer;
+	};
+
+	//	Serialize Field Variables
+	[SerializeField]
+	private PrefabPool[] propPrefabs;
+	[SerializeField]
+	private PrefabPool[] itemPrefabs;
+
+	//	Variables for pool
+	private List<GameObject>[] propPool;
+	private List<GameObject>[] itemPool;
+	protected GameObject propContainer;
+	protected GameObject itemContainer;
+
+	void Awake(){
+		instance = this;
+
+		GameObject containerOnject = new GameObject ("Object Pool");
+		propContainer = new GameObject ("Prop Pool");
+		propContainer.transform.parent = containerOnject.transform;
+		itemContainer = new GameObject ("Item Pool");
+		itemContainer.transform.parent = containerOnject.transform;
+
+		propPool = new List<GameObject>[propPrefabs.Length];
+		itemPool = new List<GameObject>[itemPrefabs.Length];
+
+		//	For Props
+		int index = 0;
+		foreach(PrefabPool propPrefab in propPrefabs){
+			propPool [index] = new List<GameObject> ();
+			for (int i = 0; i < propPrefab.amountInBuffer; i++) {
+				GameObject temp = Instantiate (propPrefab.prefab);
+				temp.name = propPrefab.prefab.name;// + " ("+i+")";
+				PoolGameObject (temp);
+			}
+			index++;
+		}
+
+		//	For Items
+		index = 0;
+		foreach(PrefabPool itemPrefab in itemPrefabs){
+			itemPool [index] = new List<GameObject> ();
+			for (int i = 0; i < itemPrefab.amountInBuffer; i++) {
+				GameObject temp = Instantiate (itemPrefab.prefab);
+				temp.name = itemPrefab.prefab.name;// + " ("+i+")";
+				PoolGameObject (temp);
+			}
+			index++;
+		}
+
+	}
+
+	public void PoolGameObject(GameObject obj){
+
+		switch (obj.GetComponent<ID>().GetTypeOfID()){
+		case TypeOfID.PROP:
+			for(int i = 0; i<propPrefabs.Length; i++){
+				if (propPrefabs [i].prefab.GetComponent<ID>().GetID() == obj.GetComponent<ID>().GetID()) {
+					obj.SetActive (false);
+					obj.transform.parent = propContainer.transform;
+					obj.transform.position = propContainer.transform.position;
+					propPool [i].Add (obj);
+				}
+			}
+			break;
+		case TypeOfID.ITEM:
+			for(int i = 0; i<itemPrefabs.Length; i++){
+				if (itemPrefabs [i].prefab.GetComponent<ID>().GetID() == obj.GetComponent<ID>().GetID()) {
+					obj.SetActive (false);
+					obj.transform.parent = itemContainer.transform;
+					obj.transform.position = itemContainer.transform.position;
+					itemPool [i].Add (obj);
+				}
+			}
+			break;
+		}
+
+
+	}
+
+	public GameObject GetGameObjectOfType(string objectType,bool onlyPooled,TypeOfID type){
+
+		switch (type){
+		case TypeOfID.PROP:
+			for (int i = 0; i < propPrefabs.Length; i++) {
+				GameObject propPrefab = propPrefabs[i].prefab;
+				if (propPrefab.name == objectType) {
+					if (propPool [i].Count > 0) {
+						GameObject pooledObject = propPool [i] [0];
+						pooledObject.transform.parent = null;
+						propPool [i].RemoveAt (0);
+						pooledObject.SetActive (true);
+						return pooledObject;
+					}
+					else if(!onlyPooled){
+						return Instantiate (propPrefabs[i].prefab);
+					}
+					break;
+				}
+			}
+			break;
+		case TypeOfID.ITEM:
+			for (int i = 0; i < itemPrefabs.Length; i++) {
+				GameObject itemPrefab = itemPrefabs[i].prefab;
+				if (itemPrefab.name == objectType) {
+					if (itemPool [i].Count > 0) {
+						GameObject pooledObject = itemPool [i] [0];
+						pooledObject.transform.parent = null;
+						itemPool [i].RemoveAt (0);
+						pooledObject.SetActive (true);
+						return pooledObject;
+					}
+					else if(!onlyPooled){
+						return Instantiate (itemPrefabs[i].prefab);
+					}
+					break;
+				}
+			}
+			
+			break;
+		}
+			
+		return null;
+	}
+}
+
+/*
+ * public class ObjectPool : MonoBehaviour {
 
 	public static ObjectPool instance;
 
@@ -73,173 +206,4 @@ public class ObjectPool : MonoBehaviour {
 		}
 		return null;
 	}
-
-
-}
-
-
-
-/*
-public class ObjectPool : MonoBehaviour {
-
-	//	Public Variables
-	public static ObjectPool instance;
-
-	//	Custom structure to add prefabs.
-	[System.Serializable]
-	public struct PrefabPool{
-		public GameObject prefab;
-		public int	amountInBuffer;
-	};
-
-	//	Serialize Field Variables
-	[SerializeField]
-	private PrefabPool[] propPrefabs;		//	Array of types of prefabs for props.
-	[SerializeField]
-	private PrefabPool[] itemPrefabs;		// 	Array of types of prefabs for items.
-
-	public List<GameObject>[] propPool;		//	Array of Lists of each kind of prefab.
-	public List<GameObject>[] itemPool;		//	Array of Lists of each kind of prefab.
-
-	protected Transform containerObject;	//	Game object that contains Props and Items.
-	protected Transform containerProps;		//	Game object that contain Props.
-	protected Transform containerItems;		//	Game object that contain Items.
-
-
-
-	//	Initializing
-	void Awake(){
-		//	Initializing the singleton.
-		instance = this;
-	}
-
-	void Start(){
-		//	Crating a the containers.
-		containerObject	= new GameObject ("Object Pool").transform;
-		containerProps	= new GameObject ("Props Pool").transform;
-		containerItems	= new GameObject ("Items Pool").transform;
-
-		//	Assigning the contentObject as a parent.
-		containerProps.parent = containerObject;
-		containerItems.parent = containerObject;
-
-		//	Initializing the array of list of objects.
-		propPool = new List<GameObject>[propPrefabs.Length];
-		itemPool = new List<GameObject>[itemPrefabs.Length];
-
-		//	Creating props.
-		int index = 0;
-		foreach(PrefabPool propPrefab in propPrefabs){
-
-			//	Initializing the list of objects.
-			propPool [index] = new List<GameObject> ();
-			//	Creating the objects according to the propPrefabs.
-			for (int i = 0; i < propPrefab.amountInBuffer; i++) {
-				GameObject temp = Instantiate (propPrefab.prefab);
-				temp.name = propPrefab.prefab.name;
-				//	Pooling the prop.
-				PoolGameObject(temp,TypeOfID.PROP);
-			}
-			index++;
-		}
-
-		//	Creating items
-		index = 0;
-		foreach(PrefabPool itemPrefab in itemPrefabs){
-
-			//	Initializing the list of objects.
-			itemPool [index] = new List<GameObject> ();
-			//	Creating the objects according to the itemPrefabs.
-			for (int i = 0; i < itemPrefab.amountInBuffer; i++) {
-				GameObject temp = Instantiate (itemPrefab.prefab);
-				temp.name = itemPrefab.prefab.name;
-				//	Pooling the item.
-				PoolGameObject(temp,TypeOfID.ITEM);
-			}
-			index++;
-		}
-			
-	}
-
-		
-
-	//	Pool an object.
-	public void PoolGameObject(GameObject obj,TypeOfID type){
-
-
-		switch (type) {
-
-		case TypeOfID.ITEM:
-
-			//	Search for the ID of the object
-			for(int i = 0; i<itemPrefabs.Length; i++){
-				if (itemPrefabs [i].prefab.GetComponent<ID>().GetID() == obj.GetComponent<ID>().GetID()) {
-
-					//	Turn Off the object
-					obj.SetActive (false);
-					//	Set the parent
-					obj.transform.parent = containerItems;
-					//	Set the position
-					obj.transform.position = containerObject.transform.position;
-					//	Add to the pool
-					itemPool [i].Add (obj);
-				}
-			}
-
-			break;
-
-		case TypeOfID.PROP:
-
-			//	Search for the ID of the object
-			for(int i = 0; i<propPrefabs.Length; i++){
-				if (propPrefabs [i].prefab.GetComponent<ID>().GetID() == obj.GetComponent<ID>().GetID()) {
-
-					//	Turn Off the object
-					obj.SetActive (false);
-					//	Set the parent
-					obj.transform.parent = containerProps;
-					//	Set the position
-					obj.transform.position = containerObject.transform.position;
-					//	Add to the pool
-					propPool [i].Add (obj);
-				}
-			}
-
-			break;
-
-		}
-	}
-
-	//	Return an object
-	public GameObject GetGameObjectOfType(string id,bool urgent,TypeOfID type){
-
-		switch (type) {
-
-		case TypeOfID.ITEM:
-
-			for (int i = 0; i < itemPrefabs.Length; i++) {
-				GameObject prefab = itemPrefabs[i].prefab;
-				if (prefab.GetComponent<ID> ().GetID () == id) {
-					Debug.Log (itemPool[i].Count);
-				}
-			}
-
-			break;
-
-		case TypeOfID.PROP:
-
-			for (int i = 0; i < propPrefabs.Length; i++) {
-				GameObject prefab = propPrefabs[i].prefab;
-				if (prefab.GetComponent<ID> ().GetID () == id) {
-					Debug.Log (propPool[0][0].ToString());
-				}
-			}
-
-			break;
-
-		}
-			
-		return null;
-	}
-
 }*/
