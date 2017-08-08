@@ -31,10 +31,13 @@ public class CollisionDetector : MonoBehaviour {
 		//	If it is a coin.
 		if (other.transform.CompareTag ("Coin")) {
 			//	Return the coin to the pool.
-			//ObjectPool.instance. (other.gameObject);
+			ObjectPool.instance.PoolGameObject(other.gameObject);
 			//	TODO Increase the amount of Money.
 			//	Make a toss.
-			factory.TossCoins (0,1,0.1f);
+			if(other.transform.GetComponent<ID>().GetID() == "Silver Coin")
+				factory.TossCoins (0,1,0.1f);
+			else
+				factory.TossCoins (1,1,0.1f);
 		}
 	}
 

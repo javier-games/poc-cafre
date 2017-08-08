@@ -122,7 +122,6 @@ public class SectionManager : MonoBehaviour {
 		sections [index].SetActive (false);
 
 		while (sections [index].transform.childCount>0) {
-			Debug.Log (sections [index].transform.GetChild (0).name);
 			ObjectPool.instance.PoolGameObject (sections [index].transform.GetChild (0).gameObject);
 		}
 

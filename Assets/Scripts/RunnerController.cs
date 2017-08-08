@@ -50,6 +50,8 @@ public class RunnerController : MonoBehaviour {
 	private Vector3 velocityTransition;		//	Velocity of the transition.
 	private Vector3 lastPosition;			//	Last position.
 
+	private RaycastHit klaxonHit;
+
 	private bool trackPath = true;
 
 	//	Required Components
@@ -87,7 +89,7 @@ public class RunnerController : MonoBehaviour {
 		//	Updating the speed
 		speed =  Mathf.Lerp(startSpeed,targetSpeed,(Time.time - startSpeedTime)/accel );
 
-		if (speed < minPassengerSpeed)
+		if (speed < minPassengerSpeed && currentNode.GetRightNode() == null)
 			detector.LookForAPassenger ();
 
 		movement.Forward( speed/ 50f);
@@ -113,6 +115,14 @@ public class RunnerController : MonoBehaviour {
 		//	Decrease the speed
 		if (Input.GetKeyDown(KeyCode.DownArrow) )
 			Brake();
+
+		if(Input.GetMouseButtonDown(0)){
+			if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out klaxonHit)){
+				if(klaxonHit.transform.CompareTag("Passenger")){
+					//klaxonHit.transform.GetComponent<PassengerController>().GetAtention(transform.position);
+				}
+			}
+		}
 		#endif
 
 		#if UNITY_IOS || UNITY_ANDROID
@@ -131,8 +141,17 @@ public class RunnerController : MonoBehaviour {
 		//	Decrease the speed
 		if (Gestures.instance.swipeState == SwipeState.Down )
 			Brake();
-		#endif
 
+		if (Input.touchCount > 0){
+			if (Input.touches [0].tapCount == 1) {
+				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.touches[0].position), out klaxonHit)){
+					if(klaxonHit.transform.CompareTag("Passenger")){
+						//klaxonHit.transform.GetComponent<PassengerController>().GetAtention(transform.position);
+					}
+				}
+			}
+		}
+		#endif
 	}
 	private void MoveToLeft(){
 		//	Update the index of thenew current node.

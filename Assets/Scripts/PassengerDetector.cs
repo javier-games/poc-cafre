@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// 
@@ -15,10 +16,18 @@ public class PassengerDetector : MonoBehaviour {
 	private float maxDistance;			//	Maximum distance of the ray
 	[SerializeField]
 	private LayerMask passengerMask;	//	Layer of the passengers
-	[SerializeField]
-	private Transform doorHandle;
 
 	private RaycastHit passengerHit;	//	Info of the passenger reached by the ray.
+	private List<PassengerController> passengers;
+
+	private CoinFactory factory;		//	System to animate a toss.
+
+
+	//	Initializing
+	void Start(){
+		factory = GetComponent<CoinFactory> ();
+		passengers = new List<PassengerController> ();
+	}
 
 	public void LookForAPassenger(){
 
@@ -28,7 +37,21 @@ public class PassengerDetector : MonoBehaviour {
 		#endif
 		//	Trigger the ray.
 		if (Physics.Raycast (transform.position + offset, transform.right, out passengerHit, maxDistance, passengerMask)) {
-			passengerHit.transform.GetComponent<PassengerController> ().Take(doorHandle);
+			PassengerController passenger;
+			passengerHit.transform.GetComponent<PassengerController> ().Take(transform, out passenger);
+			if (passenger != null) {
+				passengers.Add (passenger);
+			}
+		}
+
+		if(passengers.Count>0){
+			for (int i = 0; i < passengers.Count; i++) {
+				if (passengers [i].Arrive ()) {
+					factory.TossCoins (1,passengers [i].GetAmountOfCoins(),0.1f);
+					passengers.RemoveAt (i);
+
+				}
+			}
 		}
 	}
 
