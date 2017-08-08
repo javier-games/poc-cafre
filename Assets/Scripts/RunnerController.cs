@@ -46,6 +46,7 @@ public class RunnerController : MonoBehaviour {
 	private float targetSpeed;				//	The speed desired.
 	private float startSpeed; 				//	The speed before start to accelerate.
 	private float startSpeedTime;			//	Time before start to accelerate.
+	private float nodeTransition = 0f;		//
 
 	private Vector3 velocityTransition;		//	Velocity of the transition.
 	private Vector3 lastPosition;			//	Last position.
@@ -154,19 +155,11 @@ public class RunnerController : MonoBehaviour {
 		#endif
 	}
 	private void MoveToLeft(){
-		//	Update the index of thenew current node.
-		currentNode.GetLeftNode ().SetIndexTime (currentNode.GetIndexTime ());
-		//	Reset the index.
-		currentNode.ResetIndexTime();
 		//	Change the node.
 		currentNode = currentNode.GetLeftNode ();
 		movement.SetDirection (0.6f);
 	}
 	private void MoveToRight(){
-		//	Update the index of thenew current node.
-		currentNode.GetRightNode ().SetIndexTime (currentNode.GetIndexTime ());
-		//	Reset the index.
-		currentNode.ResetIndexTime();
 		//	Change the node.
 		currentNode = currentNode.GetRightNode ();
 		movement.SetDirection (-0.6f);
@@ -206,11 +199,13 @@ public class RunnerController : MonoBehaviour {
 
 	private Vector3 GetIncomingPosition(){
 		
-		bool changeNode = false;	//	Variable used to know if it is necesary to change the node.
+
 		//	Getting the incoming position.
-		Vector3 incomingPosition = currentNode.GetPosition (speed,out changeNode);
-		if (changeNode) {
-			currentNode.ResetIndexTime ();
+		Vector3 incomingPosition = currentNode.GetPosition (speed, ref nodeTransition);
+
+		//	If the index is grather than the total length change to the incoming position.
+		if (nodeTransition >= 1) {
+			nodeTransition = 0;
 			currentNode = currentNode.GetIncomingNode ();
 		}
 
@@ -234,5 +229,12 @@ public class RunnerController : MonoBehaviour {
 
 	public void StopTrackingPath(){
 		trackPath = false;
+	}
+
+	public Node GetCurrentNode(){
+		return currentNode;
+	}
+	public float GetNodeTransition(){
+		return nodeTransition;
 	}
 }

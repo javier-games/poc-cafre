@@ -27,7 +27,7 @@ public class Node : MonoBehaviour {
 	private float		lenght		= 0;			//	Lenght of the Bezier Curve of the edge.
 	[SerializeField]
 	private bool		isEdge		= false;		//	Flag to know if the Node is also an Edge.
-	private float		indexTime	= 0;			//	Indicates the proportion of the edge traveled.
+	//private float		indexTime	= 0;			//	Indicates the proportion of the edge traveled.
 
 
 
@@ -63,9 +63,6 @@ public class Node : MonoBehaviour {
 	public float GetLenght(){
 		return lenght;
 	}
-	public float GetIndexTime(){
-		return indexTime;
-	}
 	public bool IsEdge(){
 		SetToEdge ();
 		return isEdge;
@@ -97,12 +94,6 @@ public class Node : MonoBehaviour {
 	public void SetLenght(float lenght){
 		this.lenght = lenght;
 	}
-	public void SetIndexTime(float indexTime){
-		this.indexTime = indexTime;
-	}
-	public void ResetIndexTime(){
-		indexTime = 0;
-	}
 
 
 
@@ -118,22 +109,29 @@ public class Node : MonoBehaviour {
 			3f * OneMinusT * t * t * p2 +
 			t * t * t * p3;
 	}
+
 	//	Method to update the position of the indexTime.	
-	public Vector3 GetPosition(float speed,out bool changeNode){
+	public Vector3 GetPosition(float speed,ref float nodeTransition){
 		//	Acumulate the proportion of length traveled acording to de speed and deltaTime.
-		indexTime += (Time.deltaTime * speed) / lenght;
-		changeNode = false;
-		//	If the index is grather than the total length return a true value by reference.
-		if (indexTime >= 1) {
-			changeNode = true;
-		}
+		nodeTransition += (Time.deltaTime * speed) / lenght;
 		//	Returning the new position.
 		return BezierPoint (
-				transform.position,
-				incomingNode.transform.position,
-				transform.TransformPoint (tangent [1]),
-				incomingNode.transform.TransformPoint (incomingNode.GetTangent (0)),
-				indexTime
+			transform.position,
+			incomingNode.transform.position,
+			transform.TransformPoint (tangent [1]),
+			incomingNode.transform.TransformPoint (incomingNode.GetTangent (0)),
+			nodeTransition
+		);
+	}
+	//	Method to update the position of the indexTime.	
+	public Vector3 GetPosition(Node currentNode, Node incomingNode, float nodeTransition){
+		//	Returning the new position.
+		return BezierPoint (
+			currentNode.transform.position,
+			incomingNode.transform.position,
+			currentNode.transform.TransformPoint (currentNode.GetTangent (1)),
+			incomingNode.transform.TransformPoint (incomingNode.GetTangent (0)),
+			nodeTransition
 		);
 	}
 
