@@ -4,7 +4,7 @@ using System.Collections;
 public class AnnoyingCanvas : MonoBehaviour {
 
 	public static AnnoyingCanvas instance;
-	
+
 	[SerializeField] private Transform target;
 	[SerializeField] private Vector3 offset;
 	[SerializeField] private float smooth = 0.4f;
@@ -51,6 +51,5 @@ public class AnnoyingCanvas : MonoBehaviour {
 			first = true;
 		}
 	}
-
 
 }
