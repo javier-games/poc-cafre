@@ -9,7 +9,9 @@ public class AnnoyingCanvas : MonoBehaviour {
 	[SerializeField] private Vector3 offset;
 	[SerializeField] private float smooth = 0.4f;
 	[SerializeField] private float mesaggeDuration = 2f;
-	[SerializeField] private Transform firstMessage;
+	[SerializeField] private Transform filcherMessage;
+	[SerializeField] private int firstMessage;
+	[SerializeField] private Transform[] messages;
 
 	private bool first = true;
 	private Vector3 velocity;
@@ -19,7 +21,7 @@ public class AnnoyingCanvas : MonoBehaviour {
 	}
 
 	void Start(){
-		firstMessage.gameObject.SetActive (false);
+		messages[firstMessage].gameObject.SetActive (false);
 	}
 
 	// Update is called once per frame
@@ -28,26 +30,32 @@ public class AnnoyingCanvas : MonoBehaviour {
 		transform.LookAt (Camera.main.transform.forward + target.position + offset);
 	}
 
+	public void Assault(bool state){
+		filcherMessage.gameObject.SetActive (state);
+	}
+
 	public void SendAMessage(){
 		if (first) {
-			firstMessage.gameObject.SetActive (true);
-			StartCoroutine (ShotMessage (firstMessage.GetSiblingIndex()));
+			messages[firstMessage].gameObject.SetActive (true);
+			StartCoroutine (ShotMessage (firstMessage));
 			first = false;
 		} else {
-			for (int i = 0; i < transform.childCount; i++) {
-				if (!transform.GetChild (i).gameObject.activeInHierarchy) {
-					transform.GetChild (i).gameObject.SetActive (true);
-					StartCoroutine (ShotMessage (i));
+			for(int i = 0; i<messages.Length; i++){
+				int j = Random.Range (i,messages.Length);
+				if (!messages [j].gameObject.activeInHierarchy) {
+					messages [j].gameObject.SetActive (true);
+					StartCoroutine (ShotMessage (j));
 					break;
 				}
 			}
+
 		}
 	}
 
 	IEnumerator ShotMessage(int childIndex){
 		yield return new WaitForSeconds(mesaggeDuration);
-		transform.GetChild (childIndex).gameObject.SetActive (false);
-		if (transform.GetChild (childIndex) == firstMessage) {
+		messages[childIndex].gameObject.SetActive (false);
+		if (childIndex == firstMessage) {
 			first = true;
 		}
 	}

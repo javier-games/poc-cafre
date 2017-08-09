@@ -15,6 +15,8 @@ public class CollisionDetector : MonoBehaviour {
 	private int timesToCollide = 3;		//	Times that the veicle can collide.
 	[SerializeField]
 	private ParticleSystem explotion;	//	Particle system to exploit.
+	[SerializeField]
+	private float locationToPay = 1;
 
 	private CoinFactory factory;		//	System to animate a toss.
 
@@ -47,21 +49,21 @@ public class CollisionDetector : MonoBehaviour {
 		//	Is it its a Vehicle.
 		if (other.transform.CompareTag ("Vehicle")) {
 			//	If it strikes behind.
-			if (transform.InverseTransformPoint (other.transform.position).z > 1) {
+			if (transform.InverseTransformPoint (other.transform.position).z > locationToPay) {
 				timesToCollide--;
 				//	If it collide to the limit.
 				if (timesToCollide <= 0) {
 					//	Stop tracking the path.
 					GetComponent<RunnerController> ().StopTrackingPath ();
 					//	Add a foce to impulse the other car.
-					other.transform.GetComponent<Rigidbody> ().AddForce(transform.forward*1000f+transform.up*10000f,ForceMode.Impulse);
+					//other.transform.GetComponent<Rigidbody> ().AddForce(transform.forward*1000f+transform.up*10000f,ForceMode.Impulse);
 					// Play Explotion FX.
 					explotion.Play ();
 					// TODO GAME OVER.
 				}
 				else {
 					//	Add a foce to impulse the other car.
-					other.transform.GetComponent<Rigidbody> ().AddForce(transform.right*10000f+transform.forward*100f,ForceMode.Impulse);
+					//other.transform.GetComponent<Rigidbody> ().AddForce(transform.right*10000f+transform.forward*100f,ForceMode.Impulse);
 				}
 			}
 			// Else it crashes across.
@@ -70,7 +72,7 @@ public class CollisionDetector : MonoBehaviour {
 				// TODO Add Money to the bag.
 				factory.TossCoins (1,1,0.1f);
 				//	Add a foce to impulse the other car.
-				other.transform.GetComponent<Rigidbody> ().AddForce(-other.contacts[0].normal*10000f,ForceMode.Impulse);
+				//other.transform.GetComponent<Rigidbody> ().AddForce(-other.contacts[0].normal*10000f,ForceMode.Impulse);
 			}
 		}
 	}

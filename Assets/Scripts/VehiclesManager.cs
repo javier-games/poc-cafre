@@ -34,36 +34,28 @@ public class VehiclesManager : MonoBehaviour {
 		switch (preposition) {
 			
 		case VehiclePreposition.INFRONT:
-			
-			Node currentNode = mainVehicle.GetCurrentNode ();
-			Node incomingNode = currentNode.GetIncomingNode ();
 
-			currentNodeTransition = mainVehicle.GetNodeTransition();
+			currentNodeTransition = mainVehicle.GetNodeTransition ();
 			distance = 0;
-
-			if (currentNode.IsEdge ()) {
-				for (int i = 0; i < accuaracy; i++) {
-					float vehicleTransition = currentNodeTransition + i * (1f - currentNodeTransition) / (accuaracy * 1f);
-
-					currentComputedPosition = currentNode.GetPosition (currentNode,incomingNode,vehicleTransition);
-					//	Calculating the distance between steps.
-					if (i > 0) {
-						distance += Vector3.Distance (lastComputedPosition, currentComputedPosition);
-						if (distance > inFrontOffset) {
-							GameObject car = ObjectPool.instance.GetGameObjectOfType (iDs[Random.Range(0,iDs.Count)],true,TypeOfID.PROP);
-							car.transform.position = currentComputedPosition;
-							Debug.Break();
-							break;
-						}
-					} 
-					lastComputedPosition = currentComputedPosition;
-				}
-			}
-
+			CheckDistance(iDs,1,
+				mainVehicle.GetCurrentNode (),
+				mainVehicle.GetCurrentNode ().GetIncomingNode (),
+				currentNodeTransition, inFrontOffset
+			);
 
 			break;
 
 		case VehiclePreposition.BEHIND:
+			
+			currentNodeTransition = mainVehicle.GetNodeTransition ();
+			distance = 0;
+			CheckDistance(iDs,-1,
+				mainVehicle.GetCurrentNode (),
+				mainVehicle.GetCurrentNode ().GetIncomingNode (),
+				currentNodeTransition,
+				behindOffset
+			);
+
 			break;
 
 		case VehiclePreposition.RANDOM:
@@ -74,6 +66,43 @@ public class VehiclesManager : MonoBehaviour {
 			);
 			break;
 		}
+	}
+
+	private void CheckDistance( List<string> iDs, int sense, Node currentNode, Node incomingNode , float transition, float offset){
+
+		if (currentNode.IsEdge ()) {
+			for (int i = 0; i < accuaracy; i++ ) {
+
+				float vehicleTransition = sense > 0 ?
+					transition + i * (1f - transition) / (accuaracy * 1f) :
+					transition - i * (transition) / (accuaracy * 1f);
+
+				currentComputedPosition = currentNode.GetPosition (currentNode,incomingNode,vehicleTransition);
+
+				//	Calculating the distance between steps.
+				if (i > 0 ) {
+					distance += Vector3.Distance (lastComputedPosition, currentComputedPosition);
+					if ( distance > offset) {
+						distance = 0;
+						GameObject vehicle = ObjectPool.instance.GetGameObjectOfType (
+							iDs[Random.Range(0,iDs.Count)],
+							true,
+							TypeOfID.PROP
+						);
+						vehicle.GetComponent<VehicleController> ().SetUp (currentNode,vehicleTransition,mainVehicle.transform);
+						vehicle.transform.position = currentComputedPosition;
+						break;
+					}
+				} 
+				lastComputedPosition = currentComputedPosition;
+				if (i == accuaracy - 1 && sense > 0) {
+					distance = 0;
+					CheckDistance (iDs,sense,incomingNode,incomingNode.GetIncomingNode(),0f,offset-distance);
+				}
+			}
+
+		}
+
 	}
 
 }

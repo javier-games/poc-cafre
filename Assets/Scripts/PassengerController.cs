@@ -11,18 +11,20 @@ using UnityEngine.AI;
 
 
 public enum PassengerState{ WALKING, WAITING, BOARDING, TRAVELING, BOTHERING, ARRIVING, DYING }
-public enum PAssengerType{ GENERAL, FILCHER}
+public enum PassengerType{ GENERAL, FILCHER}
 
 public class PassengerController : MonoBehaviour {
 
+	[SerializeField] PassengerType type = PassengerType.GENERAL;
 	[SerializeField] int   amountOfCoins = 5;
 	[SerializeField] float boardingSmooth = 0.1f;
 	[SerializeField] float boardingDuration = 1.5f;
 	[SerializeField] float travelingSmooth = 0.8f;
-	[SerializeField] float travelingDuration = 10f;
-	[SerializeField] float botheringDecrement = 0.3f;
-	[SerializeField] float botheringDuration = 2f;
-	[SerializeField] float arrivingDuration;
+	[SerializeField] float travelingDuration = 15f;
+	[SerializeField] float botheringDecrement = 0.05f;
+	[SerializeField] float botheringDuration = 1f;
+	[SerializeField] float arrivingDuration = 3f;
+	[SerializeField] int wriggleAmount = 20;
 	[SerializeField] Vector3 offsetHandle;
 
 
@@ -53,25 +55,47 @@ public class PassengerController : MonoBehaviour {
 		case PassengerState.BOARDING:
 			Vector3 handle = target.position + target.TransformVector (offsetHandle);
 			transform.position = Vector3.SmoothDamp (transform.position, handle, ref velocity, boardingSmooth);
-			if (currentTime/boardingDuration > 1f) {
+			if (currentTime / boardingDuration > 1f) {
 				SetState (PassengerState.TRAVELING);
 			}
+			transform.LookAt (target);
 			break;
 
 		case PassengerState.TRAVELING:
-			Vector3 center = target.position + target.TransformVector (offsetHandle.z * Vector3.forward);
-			transform.position = Vector3.SmoothDamp (transform.position, center, ref velocity, travelingSmooth);
-			if (currentTime/travelingDuration > 1f) {
+			
+			Vector3 centerTraveling = target.position + target.TransformVector (offsetHandle.z * Vector3.forward);
+			transform.position = Vector3.SmoothDamp (transform.position, centerTraveling, ref velocity, travelingSmooth);
+
+			switch (type) {
+			case PassengerType.GENERAL:
+				if (currentTime / travelingDuration > 1f)
+					SetState (PassengerState.BOTHERING);
+				break;
+			case PassengerType.FILCHER:
 				SetState (PassengerState.BOTHERING);
+				break;
 			}
+
 			break;
 
 		case PassengerState.BOTHERING:
-
-			if (currentTime/botheringDuration > 1f) {
-				AnnoyingCanvas.instance.SendAMessage ();
-				botheringDuration = botheringDuration - botheringDecrement < 0 ? botheringDecrement :botheringDuration-botheringDecrement ;
-				SetState (PassengerState.BOTHERING);
+			
+			switch (type) {
+			case PassengerType.GENERAL:
+				if (currentTime / botheringDuration > 1f) {
+					AnnoyingCanvas.instance.SendAMessage ();
+					botheringDuration = botheringDuration - botheringDecrement*8f < 0 ? botheringDecrement*8f : botheringDuration - botheringDecrement;
+					SetState (PassengerState.BOTHERING);
+				}
+				break;
+			case PassengerType.FILCHER:
+				Vector3 centerBothering = target.position + target.TransformVector (offsetHandle.z * Vector3.forward);
+				transform.position = Vector3.SmoothDamp (transform.position, centerBothering, ref velocity, travelingSmooth);
+				if (Gestures.instance.GetWriggleCount () > wriggleAmount) {
+					AnnoyingCanvas.instance.Assault (false);
+					SetState (PassengerState.ARRIVING);
+				}
+				break;
 			}
 
 			break;
@@ -117,7 +141,10 @@ public class PassengerController : MonoBehaviour {
 			break;
 
 		case PassengerState.BOTHERING:
-			
+
+			if (type == PassengerType.FILCHER) {
+				AnnoyingCanvas.instance.Assault (true);
+			}
 			currentState = newState;
 			startTime = Time.time;
 
@@ -144,7 +171,7 @@ public class PassengerController : MonoBehaviour {
 		SetState (PassengerState.BOARDING);
 	}
 	public bool Arrive(){
-		if (currentState == PassengerState.BOTHERING) {
+		if (currentState == PassengerState.BOTHERING && type == PassengerType.GENERAL) {
 			SetState (PassengerState.ARRIVING);
 			return true;
 		}

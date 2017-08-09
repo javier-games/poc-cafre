@@ -25,6 +25,8 @@ public class Gestures: MonoBehaviour{
 	private Vector2 touchDirection;		//	Direction of the swipe.
 	private Vector2 startTouchPosition;	//	Initial position of the swipe.
 
+	private int wriggle = 0;
+
 	//	Initialization for the singleton.
 	void Awake(){
 		instance = this;
@@ -34,6 +36,9 @@ public class Gestures: MonoBehaviour{
 		swipeState = SwipeState.Null;
 	}
 
+	public int GetWriggleCount(){
+		return wriggle;
+	}
 
 	//	Reading Gestures.
 	public void ReadGestures(){
@@ -51,6 +56,7 @@ public class Gestures: MonoBehaviour{
 			case TouchPhase.Began:
 				//	Record the start position.
 				startTouchPosition = fingerToch.position;
+				wriggle = 0;
 				break;
 			
 			//	If the finger is moving...
@@ -63,18 +69,22 @@ public class Gestures: MonoBehaviour{
 				if (			Vector2.Angle (Vector2.up    , touchDirection) <= 45	&& swipeState != SwipeState.Up		&& (fingerToch.position.y-startTouchPosition.y) > minSwipeHeight 	) {
 					swipeState = SwipeState.Up;
 					startTouchPosition = fingerToch.position;
+					wriggle++;
 
 				} else if (		Vector2.Angle (Vector2.right , touchDirection) < 45		&& swipeState != SwipeState.Right	&& (fingerToch.position.x-startTouchPosition.x) > minSwipeWidth		) {
 					swipeState = SwipeState.Right;
 					startTouchPosition = fingerToch.position;
+					wriggle++;
 
 				} else if (		Vector2.Angle (-Vector2.up   , touchDirection) <= 45	&& swipeState != SwipeState.Down	&& Mathf.Abs(fingerToch.position.y-startTouchPosition.y) > minSwipeHeight	) {
 					swipeState = SwipeState.Down;
 					startTouchPosition = fingerToch.position;
+					wriggle++;
 
 				} else if(		Vector2.Angle (-Vector2.right, touchDirection) < 45		&& swipeState != SwipeState.Left	&& Mathf.Abs(fingerToch.position.x-startTouchPosition.x) > minSwipeWidth	) {
 					swipeState = SwipeState.Left;
 					startTouchPosition = fingerToch.position;
+					wriggle++;
 				}
 				//	Make the signal Swipe active just for one frame.
 				else if(swipeState == SwipeState.Up){
@@ -92,6 +102,7 @@ public class Gestures: MonoBehaviour{
 			case TouchPhase.Ended:
 				//	change to null :P
 				swipeState = SwipeState.Null;
+				wriggle = 0;
 				break;
 			}
 		}

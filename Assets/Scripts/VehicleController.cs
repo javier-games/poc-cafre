@@ -11,7 +11,11 @@ public class VehicleController : MonoBehaviour {
 	[SerializeField]
 	private float horizontalTime = 0.2f;	//	Time of the transition of the change between right and left.
 	[SerializeField]
+	private float limitDistance = 15;
+	[SerializeField]
 	private float timeToPool = 2.0f;
+
+	private Transform target;
 
 	private float nodeTransition;
 	private float speed;					//	Speed of the character.
@@ -19,9 +23,17 @@ public class VehicleController : MonoBehaviour {
 	private Vector3 lastPosition;			//	Last position.
 	private bool trackPath = true;
 
+	void Start(){
+		speed = regularSpeed;
+	}
+
 	void Update(){
-		if (currentNode) {
-			if (currentNode.IsEdge () && trackPath) {
+		if (currentNode != null) {
+			if (
+				currentNode.IsEdge () && 
+				trackPath &&
+				Vector3.Distance(transform.position,target.position)<limitDistance
+			) {
 				//	Get the incoming position.
 				transform.position = GetIncomingPosition ();
 				//	Get the incoming rotation.
@@ -59,6 +71,18 @@ public class VehicleController : MonoBehaviour {
 		//	Aligning the current rotation with the trajectory.
 		Quaternion incomingRotation = Quaternion.LookRotation((transform.position-lastPosition).normalized);
 		return incomingRotation;
+	}
+
+	public void SetUp(Node currentNode,float nodeTransition,Transform target){
+		this.currentNode = currentNode;
+		this.nodeTransition = nodeTransition;
+		this.target = target;
+	}
+
+	void OnCollisionEnter(Collision other){
+		if (other.transform.CompareTag ("Player")) {
+			trackPath = false;
+		}
 	}
 
 	IEnumerator GetBackToPool(){
