@@ -3,13 +3,14 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// 
+///
 /// Coin factory.
 /// Container of coins that make a toss each time that
 /// TossCoins is called.
-///  
+///
 /// </summary>
 
+[RequireComponent(typeof(RunnerSoundFX))]
 public class CoinFactory : MonoBehaviour {
 
 	//	Structure of coins
@@ -27,20 +28,21 @@ public class CoinFactory : MonoBehaviour {
 
 	//	List of coins
 	private List<GameObject>[] coins;			//	List of available coins.
-	private List<GameObject>[] coinsTemp;		//	List of no available coins. 
-
+	private List<GameObject>[] coinsTemp;		//	List of no available coins.
+	private RunnerSoundFX sound;
 
 
 	//	Initializing
 	void Start(){
 
+		sound = GetComponent <RunnerSoundFX>();
 		//	Initializing the array of lists.
 		coins 		= new List<GameObject>[coinPrefab.Length];
 		coinsTemp 	= new List<GameObject>[coinPrefab.Length];
 
 		//	Creating the coins.
 		for (int i = 0; i < coinPrefab.Length; i++) {
-			
+
 			//	Initializing the list.
 			coins [i] = new List<GameObject> ();
 			coinsTemp [i] = new List<GameObject> ();
@@ -82,6 +84,11 @@ public class CoinFactory : MonoBehaviour {
 	IEnumerator PlayToss(float timeToWait, Animator coinAnimator, int kind){
 		yield return new WaitForSeconds (timeToWait);
 		coinAnimator.SetTrigger ("Jump");
+		if (kind == 0) {
+			sound.SilverTossFX ();
+		} else {
+			sound.GoldenTossFX ();
+		}
 		//	Start coroutine to return available the coin.
 		StartCoroutine (GetBack(regenerationTime,kind));
 	}

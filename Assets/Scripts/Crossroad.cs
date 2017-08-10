@@ -5,8 +5,6 @@ using UnityEngine;
 public class Crossroad : MonoBehaviour {
 
 	[SerializeField]
-	private float frecuency = 5f;
-	[SerializeField]
 	private int amount = 3;
 	[SerializeField]
 	private Transform[] origin;
@@ -24,7 +22,7 @@ public class Crossroad : MonoBehaviour {
 	private List<GameObject> vehicles;
 
 	void Start(){
-		
+
 		transitions = new List<float> ();
 		speeds = new List<float>();
 		vehicles = new List<GameObject>();

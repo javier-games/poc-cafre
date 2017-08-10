@@ -3,14 +3,11 @@ using UnityEngine;
 
 
 /// <summary>
-/// 
+///
 /// Runner movement.
 /// This script has to be attached to the endless runner character to make it run.
-/// 
+///
 /// </summary>
-
-[RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CapsuleCollider))]
 
 public class RunnerMovement : MonoBehaviour {
 
@@ -52,7 +49,7 @@ public class RunnerMovement : MonoBehaviour {
 		//	Stop if it turned right
 		if (direction <= 0 && multiplier >= 0) {
 			direction = 0;
-		} 
+		}
 		//	Or stop if it turned left
 		else if (direction > 0 && multiplier < 0) {
 			direction = 0;

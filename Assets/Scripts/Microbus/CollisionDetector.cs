@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// 
+///
 /// Collision detector.
 /// Set of methods related to the physics collision and collider.
-/// 
+///
 /// </summary>
 
-[RequireComponent(typeof(RunnerController))]
+[RequireComponent(typeof(RunnerSoundFX))]
+[RequireComponent(typeof(CoinFactory))]
 public class CollisionDetector : MonoBehaviour {
 
 	//	Serialize Field Variables
@@ -19,6 +20,7 @@ public class CollisionDetector : MonoBehaviour {
 	private float locationToPay = 1;
 
 	private CoinFactory factory;		//	System to animate a toss.
+	private RunnerSoundFX sound;
 
 
 
@@ -59,6 +61,7 @@ public class CollisionDetector : MonoBehaviour {
 					//other.transform.GetComponent<Rigidbody> ().AddForce(transform.forward*1000f+transform.up*10000f,ForceMode.Impulse);
 					// Play Explotion FX.
 					explotion.Play ();
+					sound.ExplotionFX ();
 					// TODO GAME OVER.
 				}
 				else {

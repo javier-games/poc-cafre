@@ -2,10 +2,10 @@
 using UnityEngine;
 
 /// <summary>
-/// 
+///
 /// Runner controller.
 /// This script has to be attached to the endless runner character to make it run.
-/// 
+///
 /// </summary>
 
 [RequireComponent(typeof(RunnerMovement))]
@@ -15,49 +15,48 @@ public class RunnerController : MonoBehaviour {
 
 	[SerializeField]
 	private Node currentNode;				//	Current node.
-	[SerializeField]
-	private CoinFactory coins;				//	Factory of coins;
 
 	//	Variables of Speed
 
 	[Range (0f, 50f)]
 	[SerializeField]
-	private float regularSpeed = 15f;		//	Regular speed of the character.
+	private float regularSpeed = 15f;				//	Regular speed of the character.
 	[SerializeField]
-	private float speedIncrement = 10f;		//	Amount that can increase the speed.
+	private float speedIncrement = 10f;			//	Amount that can increase the speed.
 	[SerializeField]
-	private float speedDecrement = 15f;		//	Amount that can decrement the speed.
+	private float speedDecrement = 15f;			//	Amount that can decrement the speed.
 
 	[SerializeField]
-	private float horizontalTime = 0.2f;	//	Time of the transition of the change between right and left.
+	private float horizontalTime = 0.2f;		//	Time of the transition of the change between right and left.
 	[SerializeField]
-	private float brakeTime = 0.1f;			//	Time to brake.
+	private float brakeTime = 0.1f;					//	Time to brake.
 	[SerializeField]
-	private float accelerationTime = 1f;	//	Time to accelerate;
+	private float accelerationTime = 1f;		//	Time to accelerate;
 	[SerializeField]
-	private float highSpeedDuration = 2f;	//	Duration of high speed.
+	private float highSpeedDuration = 2f;		//	Duration of high speed.
 	[SerializeField]
 	private float lowSpeedDuration = 0.2f;	//	Duration of the brake.
 	[SerializeField]
 	private float minPassengerSpeed = 10f;	//	Minimum speed to get passenger
-	[SerializeField]
-	private float speed;					//	Speed of the character.
-	private float accel;					//	Acceleration of the character.
-	private float targetSpeed;				//	The speed desired.
-	private float startSpeed; 				//	The speed before start to accelerate.
-	private float startSpeedTime;			//	Time before start to accelerate.
-	private float nodeTransition = 0f;		//
 
-	private Vector3 velocityTransition;		//	Velocity of the transition.
-	private Vector3 lastPosition;			//	Last position.
+	private float speed;										//	Speed of the character.
+	private float accel;										//	Acceleration of the character.
+	private float targetSpeed;							//	The speed desired.
+	private float startSpeed; 							//	The speed before start to accelerate.
+	private float startSpeedTime;						//	Time before start to accelerate.
+	private float nodeTransition = 0f;			//
+
+	private Vector3 velocityTransition;			//	Velocity of the transition.
+	private Vector3 lastPosition;						//	Last position.
 
 	private RaycastHit klaxonHit;
 
-	private bool trackPath = true;
+	private bool trackPath = false;
 
 	//	Required Components
-	private RunnerMovement movement;		//	Class to move the character.
+	private RunnerMovement movement;			//	Class to move the character.
 	private PassengerDetector detector;		//	Class to detect passengers
+	private RunnerSoundFX sound;
 
 
 
@@ -65,35 +64,39 @@ public class RunnerController : MonoBehaviour {
 	void Start () {
 		movement = GetComponent<RunnerMovement>();
 		detector = GetComponent<PassengerDetector>();
+		sound = GetComponent<RunnerSoundFX> ();
 
 		speed = regularSpeed;
 		targetSpeed = regularSpeed;
 		startSpeed = regularSpeed;
 		accel = accelerationTime;
+
+		GameManager.instance.ChangeStateEvent += StartTrackingPath;
 	}
 
 	// Update
 	void Update () {
-		
 
-		//	Reading the inputs.
-		ReadInputs ();
+		if (trackPath) {
+			//	Reading the inputs.
+			ReadInputs ();
 
-		//	If the current node is an edge
-		if(currentNode.IsEdge () && trackPath){
-			//	Get the incoming position.
-			transform.position = GetIncomingPosition ();
-			//	Get the incoming rotation.
-			transform.rotation = GetIncomingRotation ();
+			//	If the current node is an edge
+			if (currentNode.IsEdge ()) {
+				//	Get the incoming position.
+				transform.position = GetIncomingPosition ();
+				//	Get the incoming rotation.
+				transform.rotation = GetIncomingRotation ();
+			}
+
+			//	Updating the speed
+			speed = Mathf.Lerp (startSpeed, targetSpeed, (Time.time - startSpeedTime) / accel);
+
+			if (speed < minPassengerSpeed && currentNode.GetRightNode () == null)
+				detector.LookForAPassenger ();
+
+			movement.Forward (speed / 50f);
 		}
-			
-		//	Updating the speed
-		speed =  Mathf.Lerp(startSpeed,targetSpeed,(Time.time - startSpeedTime)/accel );
-
-		if (speed < minPassengerSpeed && currentNode.GetRightNode() == null)
-			detector.LookForAPassenger ();
-
-		movement.Forward( speed/ 50f);
 	}
 
 
@@ -158,11 +161,13 @@ public class RunnerController : MonoBehaviour {
 		//	Change the node.
 		currentNode = currentNode.GetLeftNode ();
 		movement.SetDirection (0.6f);
+		sound.HorizontalFX ();
 	}
 	private void MoveToRight(){
 		//	Change the node.
 		currentNode = currentNode.GetRightNode ();
 		movement.SetDirection (-0.6f);
+		sound.HorizontalFX ();
 	}
 	private void Brake(){
 		StopCoroutine ("ReturnSpeed");
@@ -173,6 +178,7 @@ public class RunnerController : MonoBehaviour {
 		movement.Brake ();
 		//	Start coroutine to stop state.
 		StartCoroutine("ReturnSpeed",lowSpeedDuration);
+		sound.BrakeFX ();
 	}
 	private void Accelerate(){
 		StopCoroutine ("ReturnSpeed");
@@ -183,6 +189,7 @@ public class RunnerController : MonoBehaviour {
 		targetSpeed = targetSpeed + speedIncrement > 50f ? 50f : targetSpeed + speedIncrement;
 		//	Start coroutine to stop state.
 		StartCoroutine("ReturnSpeed",highSpeedDuration);
+		sound.RunFX ();
 	}
 	IEnumerator ReturnSpeed(float timeToWait){
 		yield return new WaitForSeconds(timeToWait);
@@ -198,7 +205,7 @@ public class RunnerController : MonoBehaviour {
 	//	Update to the new position.
 
 	private Vector3 GetIncomingPosition(){
-		
+
 
 		//	Getting the incoming position.
 		Vector3 incomingPosition = currentNode.GetPosition (speed, ref nodeTransition);
@@ -223,12 +230,17 @@ public class RunnerController : MonoBehaviour {
 	}
 	private Quaternion GetIncomingRotation(){
 		//	Aligning the current rotation with the trajectory.
-		Quaternion incomingRotation = Quaternion.LookRotation((transform.position-lastPosition).normalized);
+		Vector3 forward = (transform.position-lastPosition).normalized;
+		Quaternion incomingRotation = Quaternion.LookRotation(forward==Vector3.zero? transform.forward:forward);
 		return incomingRotation;
 	}
 
 	public void StopTrackingPath(){
 		trackPath = false;
+	}
+	public void StartTrackingPath(){
+		if(GameManager.instance.currentState == GameState.PLAYING)
+			trackPath = true;
 	}
 
 	public Node GetCurrentNode(){
@@ -237,4 +249,5 @@ public class RunnerController : MonoBehaviour {
 	public float GetNodeTransition(){
 		return nodeTransition;
 	}
+
 }
