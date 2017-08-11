@@ -57,7 +57,7 @@ public class MenuManager : MonoBehaviour {
 	//	Scene Management Methods
 
 	public void Continue(){
-		SceneManager.LoadScene ("LVL0");
+		SceneManager.LoadScene ("LVL1");
 	}
 
 	public void Exit(){
