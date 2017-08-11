@@ -24,6 +24,6 @@ public class GameManager : MonoBehaviour
     }
 
     void NewStateEvent(){
-        Debug.Log("New game state: " + currentState);
+        //Debug.Log("New game state: " + currentState);
     }
 }

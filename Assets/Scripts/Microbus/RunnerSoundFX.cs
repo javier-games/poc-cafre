@@ -22,6 +22,8 @@ public class RunnerSoundFX : MonoBehaviour {
 	private AudioClip silverTossFX;
 	[SerializeField]
 	private AudioClip takePassengerFX;
+	[SerializeField]
+	private AudioClip wrongFX;
 
 	private AudioSource soundfx;
 	private AudioSource engine;
@@ -38,8 +40,7 @@ public class RunnerSoundFX : MonoBehaviour {
 		GameManager.instance.ChangeStateEvent += GameStateChange;	
 	}
 
-	void GameStateChange()
-	{
+	void GameStateChange(){
 		switch (GameManager.instance.currentState){
 		case GameState.PREPARE:
 			engine.PlayOneShot(startFX);
@@ -82,6 +83,10 @@ public class RunnerSoundFX : MonoBehaviour {
 
 	public void TakePassengerFX(){
 		soundfx.PlayOneShot (takePassengerFX);
+	}
+
+	public void WrongFX(){
+		soundfx.PlayOneShot (wrongFX);
 	}
 
 

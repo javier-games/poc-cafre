@@ -22,7 +22,8 @@ public class PassengerController : MonoBehaviour {
 	[SerializeField] float travelingSmooth = 0.8f;
 	[SerializeField] float travelingDuration = 15f;
 	[SerializeField] float botheringDecrement = 0.05f;
-	[SerializeField] float botheringDuration = 1f;
+	[SerializeField] float botheringDuration = 1.8f;
+	[SerializeField] float firstBotheringDuration = 1.0f;
 	[SerializeField] float arrivingDuration = 3f;
 	[SerializeField] int wriggleAmount = 20;
 	[SerializeField] Vector3 offsetHandle;
@@ -83,14 +84,26 @@ public class PassengerController : MonoBehaviour {
 			switch (type) {
 			case PassengerType.GENERAL:
 				if (currentTime / botheringDuration > 1f) {
+					botheringDuration -= firstBotheringDuration;
+					firstBotheringDuration = 0;
 					AnnoyingCanvas.instance.SendAMessage ();
 					botheringDuration = botheringDuration - botheringDecrement*8f < 0 ? botheringDecrement*8f : botheringDuration - botheringDecrement;
 					SetState (PassengerState.BOTHERING);
+					AudioManager.instance.PlayAnnoingVoice (0,GetComponent<AudioSource>());
+					amountOfCoins--;
 				}
 				break;
 			case PassengerType.FILCHER:
+
 				Vector3 centerBothering = target.position + target.TransformVector (offsetHandle.z * Vector3.forward);
 				transform.position = Vector3.SmoothDamp (transform.position, centerBothering, ref velocity, travelingSmooth);
+
+
+				if (currentTime / botheringDecrement > 1f) {
+					target.GetComponent<CoinFactory> ().LostCoins (2);
+					SetState (PassengerState.BOTHERING);
+				}
+
 				if (Gestures.instance.GetWriggleCount () > wriggleAmount) {
 					AnnoyingCanvas.instance.Assault (false);
 					SetState (PassengerState.ARRIVING);
@@ -144,6 +157,11 @@ public class PassengerController : MonoBehaviour {
 
 			if (type == PassengerType.FILCHER) {
 				AnnoyingCanvas.instance.Assault (true);
+				AudioManager.instance.PlayAnnoingVoice (1, GetComponent<AudioSource> ());
+			} else {
+				botheringDuration += firstBotheringDuration;
+				AnnoyingCanvas.instance.SendAMessage ();
+				AudioManager.instance.PlayAnnoingVoice (0,GetComponent<AudioSource>());
 			}
 			currentState = newState;
 			startTime = Time.time;

@@ -13,20 +13,24 @@ public class CollisionDetector : MonoBehaviour {
 
 	//	Serialize Field Variables
 	[SerializeField]
-	private int timesToCollide = 3;		//	Times that the veicle can collide.
+	private int timesToCollide = 50;		//	Times that the veicle can collide.
 	[SerializeField]
 	private ParticleSystem explotion;	//	Particle system to exploit.
 	[SerializeField]
 	private float locationToPay = 1;
+	[SerializeField]
+	private bool insurances = true;
 
 	private CoinFactory factory;		//	System to animate a toss.
 	private RunnerSoundFX sound;
 
-
+	private int initialTimesToCollide;
 
 	//	Initializing
 	void Start(){
 		factory = GetComponent<CoinFactory> ();
+		sound = GetComponent<RunnerSoundFX> ();
+		initialTimesToCollide = timesToCollide;
 	}
 
 	//	Trigger Methods
@@ -51,22 +55,17 @@ public class CollisionDetector : MonoBehaviour {
 		//	Is it its a Vehicle.
 		if (other.transform.CompareTag ("Vehicle")) {
 			//	If it strikes behind.
-			if (transform.InverseTransformPoint (other.transform.position).z > locationToPay) {
+			if (transform.InverseTransformPoint (other.transform.position).z > locationToPay || !insurances) {
 				timesToCollide--;
+				HUDManager.instance.UpdateCrashesAmount ((timesToCollide*1.0f)/(initialTimesToCollide*1f));
 				//	If it collide to the limit.
 				if (timesToCollide <= 0) {
 					//	Stop tracking the path.
 					GetComponent<RunnerController> ().StopTrackingPath ();
-					//	Add a foce to impulse the other car.
-					//other.transform.GetComponent<Rigidbody> ().AddForce(transform.forward*1000f+transform.up*10000f,ForceMode.Impulse);
 					// Play Explotion FX.
 					explotion.Play ();
 					sound.ExplotionFX ();
-					// TODO GAME OVER.
-				}
-				else {
-					//	Add a foce to impulse the other car.
-					//other.transform.GetComponent<Rigidbody> ().AddForce(transform.right*10000f+transform.forward*100f,ForceMode.Impulse);
+					GameManager.instance.ChangeToNewState (GameState.GAME_OVER);
 				}
 			}
 			// Else it crashes across.

@@ -22,6 +22,7 @@ public class VehicleController : MonoBehaviour {
 	private Vector3 velocityTransition;		//	Velocity of the transition.
 	private Vector3 lastPosition;			//	Last position.
 	private bool trackPath = true;
+	private RaycastHit vehicleHit;
 
 	void Start(){
 		speed = regularSpeed;
@@ -82,6 +83,15 @@ public class VehicleController : MonoBehaviour {
 	void OnCollisionEnter(Collision other){
 		if (other.transform.CompareTag ("Player")) {
 			trackPath = false;
+		}
+		if (other.transform.CompareTag ("Vehicle")) {
+			if (currentNode.GetLeftNode () != null) {
+				currentNode = currentNode.GetLeftNode ();
+			} else if (currentNode.GetRightNode () != null) {
+				currentNode = currentNode.GetRightNode ();
+			} else { 
+				nodeTransition--;
+			}
 		}
 	}
 

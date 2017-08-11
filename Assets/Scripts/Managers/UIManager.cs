@@ -65,7 +65,7 @@ public class UIManager : MonoBehaviour {
 		GameManager.instance.ChangeToNewState (GameState.EXIT);
 	}
 	public void ReStart(){
-		GameManager.instance.ChangeToNewState (GameState.START);
+		GameManager.instance.ChangeToNewState (GameState.RESTART);
 	}
 	public void Store(){
 		GameManager.instance.ChangeToNewState (GameState.STORE);
@@ -110,31 +110,39 @@ public class UIManager : MonoBehaviour {
 		case GameState.GAME_OVER:
 			ClearUI ();
 			gameOverPanel.SetActive (true);
-			StartCoroutine ("LoadScene", 4f);
+			StartCoroutine (LoadScene(5f,"Menu"));
 			break;
 
 		case GameState.EXIT:
 			Time.timeScale = 1;
+			StartCoroutine (LoadScene(0.5f,"Menu"));
 			//This should be an other scene.
-			StartCoroutine ("LoadScene", 0f);
+			//StartCoroutine ("LoadScene", 0f);
 			break;
 
 		case GameState.RESTART:
-			StartCoroutine ("LoadScene", 0f);
+			StartCoroutine (LoadScene(0f,SceneManager.GetActiveScene().name));
 			break;
 
 		case GameState.WIN:
 			ClearUI ();
 			victoryPanel.SetActive (true);
-			StartCoroutine ("LoadScene", 4f);
+
+			StartCoroutine (LoadScene(5f,"LVL2"));
+			break;
+
+		case GameState.ITEMS:
+			ClearUI();
+			itemsPanel.SetActive (true);
+			Time.timeScale = 0;
 			break;
 		}
 	}
 
-	public IEnumerator LoadScene(float timeToWait){
+	public IEnumerator LoadScene(float timeToWait,string name){
 		yield return new WaitForSeconds (timeToWait);
 		ClearUI ();
 		ReStart ();
-		SceneManager.LoadScene ("Manu",LoadSceneMode.Single);
+		SceneManager.LoadScene (name,LoadSceneMode.Single);
 	}
 }

@@ -80,15 +80,28 @@ public class CoinFactory : MonoBehaviour {
 		}
 	}
 
+	public void LostCoins(int amount){
+		if (DataManager.instance.temp.money - amount > 0)
+			DataManager.instance.temp.money -= amount;
+		else {
+			DataManager.instance.temp.money = 0;
+		}
+		HUDManager.instance.UpdateMoneyText ();
+		sound.WrongFX ();
+	}
+
 	//	Playing animation
 	IEnumerator PlayToss(float timeToWait, Animator coinAnimator, int kind){
 		yield return new WaitForSeconds (timeToWait);
 		coinAnimator.SetTrigger ("Jump");
 		if (kind == 0) {
 			sound.SilverTossFX ();
+			DataManager.instance.temp.money++;
 		} else {
+			DataManager.instance.temp.money+=10;
 			sound.GoldenTossFX ();
 		}
+		HUDManager.instance.UpdateMoneyText ();
 		//	Start coroutine to return available the coin.
 		StartCoroutine (GetBack(regenerationTime,kind));
 	}
@@ -103,5 +116,10 @@ public class CoinFactory : MonoBehaviour {
 		yield return new WaitForSeconds (timeToWait);
 		coins [kind].Add (coinsTemp [kind] [0]);
 		coinsTemp [kind].RemoveAt (0);
+		if (kind == 0) {
+			sound.SilverTossFX ();
+		} else {
+			sound.GoldenTossFX ();
+		}
 	}
 }
