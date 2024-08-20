@@ -1,4 +1,6 @@
-![](docs/cafre-banner.png)
+<p align="center"> 
+  <img src="docs/cafre-banner-github.png"/>
+</p>
 
 [![Itch.io](https://img.shields.io/badge/itch.io-%23FF0B34.svg?logo=Itch.io&logoColor=white)](https://javier-games.itch.io/cafre)
 
@@ -24,63 +26,62 @@ there are bad guys ready to rob you!
 > delinquency. We hope that such issues diminish in the future and encourage positive and respectful interactions 
 > in real life.
 
-# Development
-
-This project was developed as part of the "Diplomado en Diseño y Programación de Videojuegos" a diploma
-program focused on video game design and programming handled by the National Autonomous University
-of Mexico during 2017.
-
-<div style="max-width: 100%; width: 50%; margin: auto;">
-  <img src="docs/cafre-bus-animation.gif" alt="Cinem4D Animation" style="width: 100%; height: auto;">
-</div>
-
-# Features
-
-## Navigation
-
-To achieve smooth yet controlled movement on the streets, the game implements a node-based system for generating
-Bézier curves. This allows the vehicle to seamlessly follow and switch between different paths. Players can 
-change lanes by swiping right or left, giving them intuitive control over the vehicle's direction.
-
-<div style="max-width: 100%; width: 50%; margin: auto;">
-  <img src="docs/cafre-path-creation.gif" alt="Path Tool" style="width: 100%; height: auto;">
-</div>
-
-## Collectables
-
-In the current iteration of the game, a collectible system is implemented to support a basic coin collection 
-mechanic. This system is designed to be easily expandable, allowing for the integration of power-ups and 
-additional collectibles in future updates.
-
-<div style="display: flex; justify-content: center;">
-  <img src="docs/cafre-coins-and-traffic.gif" alt="Coins and Traffic" style="max-width: 100%; width: 50%; height: auto;">
-</div>
-
-## Passengers Pick Up & Drop Off
-
-A core mechanic of the game involves collecting and delivering passengers to their destination. Once a passenger 
-is picked up, an exclamation mark will appear above the vehicle to indicate that they wish to exit. 
-If you fail to let them out promptly, they will start to scream, with dialogue balloons gradually covering 
-the screen until you allow them to disembark.
-
-To pick up or drop off passengers, you need to make a brief stop by swiping down and position your vehicle 
-close to the right sidewalk. This interaction ensures an engaging and responsive experience as you manage
-passenger needs while navigating the streets.
-
-<div style="display: flex; justify-content: center;">
-  <img src="docs/cafre-passengers-collection.gif" alt="Passengers" style="max-width: 100%; width: 50%; height: auto;">
-</div>
-
-## Thief Passengers
-
-In Mexico City, some thieves may disguise themselves as regular passengers. In the game, if you identify a 
-thief, you'll need to make a sudden move to eject them from your vehicle. Failure to do so will result in 
-the thief stealing your money, adding an extra layer of challenge and realism to your driving experience.
-
-<div style="display: flex; justify-content: center;">
-  <img src="docs/cafre-thief-collection.gif" alt="Thief" style="max-width: 100%; width: 50%; height: auto;">
-</div>
-
+# Development 
+ 
+This project was developed as part of the "Diplomado en Diseño y Programación de Videojuegos" a diploma 
+program focused on video game design and programming handled by the National Autonomous University 
+of Mexico during 2017. 
+ 
+<div style="max-width: 100%; width: 50%; margin: auto;"> 
+  <img src="docs/cafre-bus-animation.gif" alt="Cinem4D Animation" style="width: 100%; height: auto;"> 
+</div> 
+ 
+# Features 
+ 
+## Navigation 
+ 
+To achieve smooth yet controlled movement on the streets, the game implements a node-based system for generating 
+Bézier curves. This allows the vehicle to seamlessly follow and switch between different paths. Players can  
+change lanes by swiping right or left, giving them intuitive control over the vehicle's direction. 
+ 
+<div style="max-width: 100%; width: 50%; margin: auto;"> 
+  <img src="docs/cafre-path-creation.gif" alt="Path Tool" style="width: 100%; height: auto;"> 
+</div> 
+ 
+## Collectables 
+ 
+In the current iteration of the game, a collectible system is implemented to support a basic coin collection  
+mechanic. This system is designed to be easily expandable, allowing for the integration of power-ups and  
+additional collectibles in future updates. 
+ 
+<div style="display: flex; justify-content: center;"> 
+  <img src="docs/cafre-coins-and-traffic.gif" alt="Coins and Traffic" style="max-width: 100%; width: 50%; height: auto;"> 
+</div> 
+ 
+## Passengers Pick Up & Drop Off 
+ 
+A core mechanic of the game involves collecting and delivering passengers to their destination. Once a passenger  
+is picked up, an exclamation mark will appear above the vehicle to indicate that they wish to exit.  
+If you fail to let them out promptly, they will start to scream, with dialogue balloons gradually covering  
+the screen until you allow them to disembark. 
+ 
+To pick up or drop off passengers, you need to make a brief stop by swiping down and position your vehicle  
+close to the right sidewalk. This interaction ensures an engaging and responsive experience as you manage 
+passenger needs while navigating the streets. 
+ 
+<div style="display: flex; justify-content: center;"> 
+  <img src="docs/cafre-passengers-collection.gif" alt="Passengers" style="max-width: 100%; width: 50%; height: auto;"> 
+</div> 
+ 
+## Thief Passengers 
+ 
+In Mexico City, some thieves may disguise themselves as regular passengers. In the game, if you identify a  
+thief, you'll need to make a sudden move to eject them from your vehicle. Failure to do so will result in  
+the thief stealing your money, adding an extra layer of challenge and realism to your driving experience. 
+ 
+<div style="display: flex; justify-content: center;"> 
+  <img src="docs/cafre-thief-collection.gif" alt="Thief" style="max-width: 100%; width: 50%; height: auto;"> 
+</div> 
 
 # Requirements
 
