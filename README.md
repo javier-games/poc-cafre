@@ -55,9 +55,9 @@ mechanic. This system is designed to be easily expandable, allowing for the inte
 additional collectibles in future updates. 
 
 <p align="center">
-  <img src="docs/cafre-coins-and-traffic.gif" alt="Coins and Traffic" width="33%" style="display:inline-block;">
-  <img src="docs/cafre-passengers-collection.gif" alt="Passengers" width="33%" style="display:inline-block;">
-  <img src="docs/cafre-thief-collection.gif" alt="Thief Collection" width="33%" style="display:inline-block;">
+  <img src="docs/cafre-coins-and-traffic.gif" alt="Coins and Traffic" width="30%" style="display:inline-block;">
+  <img src="docs/cafre-passengers-collection.gif" alt="Passengers" width="30%" style="display:inline-block;">
+  <img src="docs/cafre-thief-collection.gif" alt="Thief Collection" width="30%" style="display:inline-block;">
 </p>
  
 ## Passengers Pick Up & Drop Off 
